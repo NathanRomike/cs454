@@ -18,6 +18,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".OnePlayer"
+            android:label="@string/title_activity_one_player"
+            android:parentActivityName=".TitleScreen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.project.game.boggle.TitleScreen" />
+        </activity>
+        <activity
+            android:name=".TwoPlayer"
+            android:label="@string/title_activity_two_player"
+            android:parentActivityName=".TitleScreen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.project.game.boggle.TitleScreen" />
+        </activity>
+        <activity
+            android:name=".Highscores"
+            android:label="@string/title_activity_highscores"
+            android:parentActivityName=".TitleScreen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.project.game.boggle.TitleScreen" />
+        </activity>
     </application>
 
 </manifest>
