@@ -1,4 +1,4 @@
-package com.app.myapplication;
+package com.project.game.boggle;
 
 /**
  * Created by Muna on 1/21/16.
