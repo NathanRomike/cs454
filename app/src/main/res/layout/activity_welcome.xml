@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="1"
+              android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcomeImageView"
+        android:src="@mipmap/bogglegame"
+        android:scaleType="fitXY"
+        android:contentDescription="Boggle Game"
+        android:layout_weight="1"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/nameEditText"
+        android:hint="Enter your name to begin"
+        android:maxLength="30"
+        android:layout_weight="1"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START TO PLAY"
+        android:id="@+id/button"
+        android:onClick="enterTittleScreen"
+        android:layout_weight="1"/>
+
+</LinearLayout>
