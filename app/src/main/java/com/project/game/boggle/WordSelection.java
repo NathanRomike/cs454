@@ -1,4 +1,4 @@
-package com.app.myapplication;
+package com.project.game.boggle;
 
 import android.widget.TextView;
 
