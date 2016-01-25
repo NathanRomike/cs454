@@ -41,7 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="448dp">
 
+        <include layout="@layout/content_one_player" />
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,11 +54,11 @@
 
         <Button android:id="@+id/submit_word"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/submit_button"
             android:onClick="onSubmit"/>
     </LinearLayout>
 
-    <include layout="@layout/content_one_player" />
+
 
 </LinearLayout>
