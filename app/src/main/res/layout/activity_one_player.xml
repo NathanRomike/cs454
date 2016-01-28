@@ -41,12 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="448dp">
 
-        <fragment android:name="com.project.game.boggle.BoardFragment"
-            android:id="@+id/board_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/activity_main" />
+        <include layout="@layout/content_one_player" />
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,6 +59,6 @@
             android:onClick="onSubmit"/>
     </LinearLayout>
 
-    <include layout="@layout/content_one_player" />
+
 
 </LinearLayout>
