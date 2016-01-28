@@ -39,7 +39,6 @@ public class Welcome extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //  start game button to enter the tittle screen
     public void enterTittleScreen(View view){
         Intent intent = new Intent(this, TitleScreen.class);
         startActivity(intent);
