@@ -14,9 +14,6 @@ import java.util.Collections;
 
 public class GridGenerator {
 
-    //static final int SIDES_ON_A_CUBE = 6;
-
-
     public static List<Character> getRandomDice() {
         List<Character> dieList = new ArrayList<>(16);
 
@@ -38,11 +35,7 @@ public class GridGenerator {
         return dieList;
     }
 
-
-
-    public static void alphaImg(TextView tv, Character alphabet)
-    {
-
+    public static void alphaImg(TextView tv, Character alphabet) {
         switch(alphabet.charValue()) {
             case 'A':
                 tv.setBackgroundResource(R.drawable.grida);
@@ -122,14 +115,6 @@ public class GridGenerator {
             case 'Z':
                 tv.setBackgroundResource(R.drawable.gridz);
                 break;
-
-
         }
-
     }
-
-
-
-
-
 }
