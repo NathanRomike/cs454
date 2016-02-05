@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-public class GridGenerator {
+public class BoardGenerator {
 
     public static List<Character> getRandomDice() {
         List<Character> dieList = new ArrayList<>(16);

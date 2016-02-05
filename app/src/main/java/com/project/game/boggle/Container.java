@@ -3,16 +3,15 @@ package com.project.game.boggle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Dictionary;
+import java.util.Map;
 
-/**
- * Created by alestin on 2/3/16.
- */
+
 public class Container {
 
     private static final String DICTIONARY = "english-dictionary.txt";
     private static final String HIGHSCORES = "highscores.txt";
 
-    private HashMap dictionary;     // Dictionary of valid words
+    private HashMap dictionary;            // Dictionary of valid words
     private ArrayList<Integer> highscores; // List of highscores
     // need dictionary data type to hold highscores and the player name
     private Dictionary<String, Integer> highscoresDic;
@@ -20,7 +19,6 @@ public class Container {
     private ArrayList<String> wordList;    // List of words
 
     private String word;     // Word
-    //private int wordSize;    // Word size
     private int wordScore;   // Word score
     private int player;      // Player #
     private int playerScore; // Player score
@@ -35,8 +33,6 @@ public class Container {
     public void setWordList(ArrayList<String> wordList) { this.wordList = wordList; }
     public String getWord() { return word; }
     public void setWord(String word) { this.word = word; }
-    //public int getWordSize() { return wordSize; }
-    //public void setWordSize(int wordSize) { this.wordSize = wordSize; }
     public int getWordScore() { return wordScore; }
     public void setWordScore(int wordScore) { this.wordScore = wordScore; }
     public int getPlayer() { return player; }
