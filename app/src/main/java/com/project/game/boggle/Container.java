@@ -2,6 +2,7 @@ package com.project.game.boggle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Dictionary;
 
 /**
  * Created by alestin on 2/3/16.
@@ -14,6 +15,8 @@ public class Container {
     private HashMap dictionary;     // Dictionary of valid words
     private ArrayList<Integer> highscores; // List of highscores
     // need dictionary data type to hold highscores and the player name
+    private Dictionary<String, Integer> highscoresDic;
+
     private ArrayList<String> wordList;    // List of words
 
     private String word;     // Word
