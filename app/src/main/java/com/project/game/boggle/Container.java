@@ -13,6 +13,7 @@ public class Container {
 
     private HashMap dictionary;     // Dictionary of valid words
     private ArrayList<Integer> highscores; // List of highscores
+    // need dictionary data type to hold highscores and the player name
     private ArrayList<String> wordList;    // List of words
 
     private String word;     // Word
