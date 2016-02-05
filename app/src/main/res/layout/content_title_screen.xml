@@ -3,13 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-<<<<<<< HEAD
-    android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-=======
     android:layout_height="match_parent"
     android:gravity="center"
->>>>>>> upstream/master
     tools:showIn="@layout/activity_title_screen">
 
     <LinearLayout
@@ -62,3 +57,5 @@
 
 
 </LinearLayout>
+
+
