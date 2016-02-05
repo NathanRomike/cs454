@@ -43,43 +43,46 @@ public class OnePlayer extends FragmentActivity {
 
     public void onSubmit(View view) {
         Container container = Container.getInstance();
-        ArrayList<String> wordList = container.getWordList();
         String word = container.getWord();
-        String words;
-        int wordSize = word.length();
-        int score = container.getPlayerScore();
-        word.toLowerCase();
+        int wordSize;
 
-        // check if word greater than 3
-        if (wordSize < 3) {
+        try {
+            wordSize = word.length();
+
+            if (wordSize < 3) {
+                return;
+            }
+        } catch (Exception e) {
             return;
         }
 
-        if (!wordList.isEmpty()) {
-            Iterator iter = wordList.iterator();
 
-            // check if word has already been used
-            while (iter.hasNext()) {
-                if (word.equals(iter.next())) {
+        ArrayList<String> wordList = container.getWordList();
+
+        if (!wordList.isEmpty()) {
+            Iterator words = wordList.iterator();
+
+            while (words.hasNext()) {
+                if (word.equals(words.next())) {
                     return;
                 }
             }
         }
 
-        // check if word is in dictionary
+
+        word = word.toLowerCase();
+
         if (Container.getInstance().getDictionary().containsKey(word)) {
             wordList.add(word);
             container.setWordList(wordList);
-
-            // clear word
-
-            // unhighlight all highlighted letters
-            WordSelection.unhighlightAll();
+            container.setWord(null);
         } else {
             return;
         }
 
-        // get points
+
+        int score = container.getPlayerScore();
+
         switch (wordSize) {
             case 3:  score += 1;
                      break;
@@ -96,7 +99,7 @@ public class OnePlayer extends FragmentActivity {
             default: score += 11;
         }
 
-        // add to score
         container.setPlayerScore(score);
+        //WordSelection.unhighlightAll();
     }
 }

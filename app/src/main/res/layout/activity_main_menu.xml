@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_menu_orange"
-    tools:context="com.project.game.boggle.TitleScreen">
+    tools:context=".MainMenu">
 
-    <include layout="@layout/content_title_screen" />
+    <include layout="@layout/content_main_menu" />
 
 </LinearLayout>
