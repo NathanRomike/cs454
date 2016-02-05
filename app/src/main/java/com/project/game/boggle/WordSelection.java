@@ -1,15 +1,101 @@
 package com.project.game.boggle;
 
+import android.util.Log;
 import android.widget.TextView;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Muna on 1/23/16.
  */
 public class WordSelection {
+    public static int currX = 0;
+    public static int currY = 0;
+    public static Map letterQueue = null;
 
-    public static void highlight(TextView textView, Character ch)
-    {
+    public static void initQueue() {
+        if (letterQueue == null) {
+            letterQueue = new LinkedHashMap<String, String>();
+        } else {
+            letterQueue.clear();
+        }
+    }
 
+    public static Boolean validMove(TextView tile, Character letter) {
+        CharSequence coordinates = tile.getHint();
+        int nextX = Character.getNumericValue(coordinates.charAt(0));
+        int nextY = Character.getNumericValue(coordinates.charAt(1));
+        int moveX = Math.abs(nextX - currX);
+        int moveY = Math.abs(nextY - currY);
+        String key = "" + nextX + nextY;
+
+        if (letterQueue.isEmpty()) {
+            currX = nextX;
+            currY = nextY;
+
+            String temp = Container.getInstance().getWord();
+            if (temp == null) {
+                temp = "" + letter;
+            } else {
+                temp += letter;
+            }
+            Container.getInstance().setWord(temp);
+            letterQueue.put(key, letter);
+
+            return true;
+        } else if ((moveX == 0) && (moveY == 0)) {
+            unhighlight(tile, letter);
+            letterQueue.remove(key);
+
+            if (letterQueue.isEmpty()) {
+                return false;
+            }
+
+            Iterator letters = letterQueue.keySet().iterator();
+            String coors = null;
+            int prevX;
+            int prevY;
+            Log.d("LETTERQUEUE", "validMove: " + letterQueue.values().toString());
+
+            while (letters.hasNext()) {
+                coors = letters.next().toString();
+            }
+
+            prevX = Character.getNumericValue(coors.charAt(0));
+            prevY = Character.getNumericValue(coors.charAt(1));
+
+            currX = prevX;
+            currY = prevY;
+
+            return false;
+        } else if ((moveX < 2) && (moveY < 2) && !(letterQueue.containsKey(key))) {
+            currX = nextX;
+            currY = nextY;
+
+
+String temp = Container.getInstance().getWord();
+if (temp == null) {
+    temp = "" + letter;
+} else {
+    temp += letter;
+}
+Container.getInstance().setWord(temp);
+            letterQueue.put(key, letter);
+            Log.d("LETTERQUEUE", "validMove: " + letterQueue.values().toString());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Boolean unhighlightAll() {
+
+        return true;
+    }
+
+    public static void highlight(TextView textView, Character ch) {
         switch (ch.charValue()) {
             case 'A': 
                 textView.setBackgroundResource(R.drawable.higha);
@@ -89,7 +175,89 @@ public class WordSelection {
             case 'Z':
                 textView.setBackgroundResource(R.drawable.highz);
                 break;
-            
+        }
+    }
+
+    public static void unhighlight(TextView tv, Character alphabet) {
+        switch(alphabet.charValue()) {
+            case 'A':
+                tv.setBackgroundResource(R.drawable.grida);
+                break;
+            case 'B':
+                tv.setBackgroundResource(R.drawable.gridb);
+                break;
+            case 'C':
+                tv.setBackgroundResource(R.drawable.gridc);
+                break;
+            case 'D':
+                tv.setBackgroundResource(R.drawable.gridd);
+                break;
+            case 'E':
+                tv.setBackgroundResource(R.drawable.gride);
+                break;
+            case 'F':
+                tv.setBackgroundResource(R.drawable.gridf);
+                break;
+            case 'G':
+                tv.setBackgroundResource(R.drawable.gridg);
+                break;
+            case 'H':
+                tv.setBackgroundResource(R.drawable.gridh);
+                break;
+            case 'I':
+                tv.setBackgroundResource(R.drawable.gridi);
+                break;
+            case 'J':
+                tv.setBackgroundResource(R.drawable.gridj);
+                break;
+            case 'K':
+                tv.setBackgroundResource(R.drawable.gridk);
+                break;
+            case 'L':
+                tv.setBackgroundResource(R.drawable.gridl);
+                break;
+            case 'M':
+                tv.setBackgroundResource(R.drawable.gridm);
+                break;
+            case 'N':
+                tv.setBackgroundResource(R.drawable.gridn);
+                break;
+            case 'O':
+                tv.setBackgroundResource(R.drawable.grido);
+                break;
+            case 'P':
+                tv.setBackgroundResource(R.drawable.gridp);
+                break;
+            case 'Q':
+                tv.setBackgroundResource(R.drawable.gridq);
+                break;
+            case 'R':
+                tv.setBackgroundResource(R.drawable.gridr);
+                break;
+            case 'S':
+                tv.setBackgroundResource(R.drawable.grids);
+                break;
+            case 'T':
+                tv.setBackgroundResource(R.drawable.gridt);
+                break;
+            case 'U':
+                tv.setBackgroundResource(R.drawable.gridu);
+                break;
+            case 'V':
+                tv.setBackgroundResource(R.drawable.gridv);
+                break;
+            case 'W':
+                tv.setBackgroundResource(R.drawable.gridw);
+                break;
+            case 'X':
+                tv.setBackgroundResource(R.drawable.gridx);
+                break;
+            case 'Y':
+                tv.setBackgroundResource(R.drawable.gridy);
+                break;
+            case 'Z':
+                tv.setBackgroundResource(R.drawable.gridz);
+                break;
         }
     }
 }

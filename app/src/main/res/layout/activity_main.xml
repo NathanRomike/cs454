@@ -16,53 +16,52 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-
-
             <!-- Row 1 -->
             <TableRow
                 android:id="@+id/Row0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/tv1"
+                    android:id="@+id/_00"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
                     android:gravity="center"
-                    android:text="" />
+                    android:text=" "
+                    android:hint="00" />
 
                 <TextView
-                    android:id="@+id/tv2"
+                    android:id="@+id/_01"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
                     android:gravity="center"
-                    android:text="" />
+                    android:text=" "
+                    android:hint="01" />
 
                 <TextView
-                    android:id="@+id/tv3"
+                    android:id="@+id/_02"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
                     android:gravity="center"
-                    android:text="" />
+                    android:text=" "
+                    android:hint="02" />
 
                 <TextView
-                    android:id="@+id/tv4"
+                    android:id="@+id/_03"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
                     android:gravity="center"
-                    android:text="" />
-
-
+                    android:text=" "
+                    android:hint="03" />
             </TableRow>
 
         <!-- Row 2 -->
@@ -70,46 +69,47 @@
             android:id="@+id/Row1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv5"
+                android:id="@+id/_10"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="10" />
 
             <TextView
-                android:id="@+id/tv6"
+                android:id="@+id/_11"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="11" />
 
             <TextView
-                android:id="@+id/tv7"
+                android:id="@+id/_12"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="12" />
 
             <TextView
-                android:id="@+id/tv8"
+                android:id="@+id/_13"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
-
-
+                android:text=" "
+                android:hint="13" />
         </TableRow>
 
         <!-- Row 3 -->
@@ -117,91 +117,95 @@
             android:id="@+id/Row2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv9"
+                android:id="@+id/_20"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="20" />
 
             <TextView
-                android:id="@+id/tv10"
+                android:id="@+id/_21"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="21" />
 
             <TextView
-                android:id="@+id/tv11"
+                android:id="@+id/_22"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="22" />
 
             <TextView
-                android:id="@+id/tv12"
+                android:id="@+id/_23"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="23" />
         </TableRow>
-
 
         <!-- Row 4 -->
         <TableRow
             android:id="@+id/Row3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv13"
+                android:id="@+id/_30"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="30" />
 
             <TextView
-                android:id="@+id/tv14"
+                android:id="@+id/_31"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="31" />
 
             <TextView
-                android:id="@+id/tv15"
+                android:id="@+id/_32"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="32" />
 
             <TextView
-                android:id="@+id/tv16"
+                android:id="@+id/_33"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:gravity="center"
-                android:text="" />
+                android:text=" "
+                android:hint="33" />
         </TableRow>
-
     </TableLayout>
 </RelativeLayout>

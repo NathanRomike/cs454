@@ -52,5 +52,4 @@
                 android:value="com.project.game.boggle.TitleScreen" />
         </activity>
     </application>
-
 </manifest>

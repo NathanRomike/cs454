@@ -8,6 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+
 /**
  * Created by nan on 1/23/16.
  */
@@ -16,7 +23,25 @@ public class Welcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+        HashMap dictionary = new HashMap();
+        ArrayList<Integer> highscores = new ArrayList<>();
+        ArrayList<String> wordList = new ArrayList<>();
+
+        try {
+            BufferedReader bf = new BufferedReader(new InputStreamReader(getAssets().open("english-dictionary.txt")));
+            String word;
+
+            while ((word = bf.readLine()) != null) {
+                dictionary.put(word, word);
+            }
+
+            Container.getInstance().setDictionary(dictionary);
+            Container.getInstance().setWordList(wordList);
+        } catch (IOException e) {
+
+        }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -39,7 +64,6 @@ public class Welcome extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //  start game button to enter the tittle screen
     public void enterTittleScreen(View view){
         Intent intent = new Intent(this, TitleScreen.class);
         startActivity(intent);

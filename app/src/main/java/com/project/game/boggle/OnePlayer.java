@@ -1,18 +1,29 @@
 package com.project.game.boggle;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-public class OnePlayer extends AppCompatActivity {
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
+public class OnePlayer extends FragmentActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
 
@@ -25,12 +36,67 @@ public class OnePlayer extends AppCompatActivity {
 
             /* TODO stop game and evaluate score */
             public void onFinish() {
-                timerTextField.setText("done!");
+                timerTextField.setText("TIME'S UP!");
             }
         }.start();
     }
 
-    public void onSubmit() {
-        
+    public void onSubmit(View view) {
+        Container container = Container.getInstance();
+        ArrayList<String> wordList = container.getWordList();
+        String word = container.getWord();
+        String words;
+        int wordSize = word.length();
+        int score = container.getPlayerScore();
+        word.toLowerCase();
+
+        // check if word greater than 3
+        if (wordSize < 3) {
+            return;
+        }
+
+        if (!wordList.isEmpty()) {
+            Iterator iter = wordList.iterator();
+
+            // check if word has already been used
+            while (iter.hasNext()) {
+                if (word.equals(iter.next())) {
+                    return;
+                }
+            }
+        }
+
+        // check if word is in dictionary
+        if (Container.getInstance().getDictionary().containsKey(word)) {
+            wordList.add(word);
+            container.setWordList(wordList);
+
+            // clear word
+
+            // unhighlight all highlighted letters
+            WordSelection.unhighlightAll();
+        } else {
+            return;
+        }
+
+        // get points
+        switch (wordSize) {
+            case 3:  score += 1;
+                     break;
+            case 4:  score += 1;
+                     break;
+            case 5:  score += 2;
+                     break;
+            case 6:  score += 3;
+                     break;
+            case 7:  score += 5;
+                     break;
+            case 8:  score += 11;
+                     break;
+            default: score += 11;
+        }
+
+        // add to score
+        container.setPlayerScore(score);
     }
 }
