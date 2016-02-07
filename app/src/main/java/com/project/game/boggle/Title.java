@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +18,14 @@ import java.util.HashMap;
  * Created by nan on 1/23/16.
  */
 public class Title extends AppCompatActivity {
+
+    private EditText nameField;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_title);
 
+        nameField = (EditText)findViewById(R.id.nameEditText);
         HashMap dictionary = new HashMap();
         ArrayList<Integer> highscores = new ArrayList<>();
         ArrayList<String> wordList = new ArrayList<>();
@@ -62,8 +67,14 @@ public class Title extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void enterTittleScreen(View view){
+    public void enterTitleScreen(View view){
         Intent intent = new Intent(this, MainMenu.class);
+        // passing player name from this title activity to OnePlayer activity
+        String name = nameField.getText().toString();
+//        intent.putExtra("playerName", name);
+//        startActivity(intent);
+        Container container = Container.getInstance();
+        container.setUser(name);
         startActivity(intent);
     }
 }

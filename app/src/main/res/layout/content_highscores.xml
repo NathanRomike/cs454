@@ -8,39 +8,8 @@
     tools:context="com.project.game.boggle.Highscores"
     tools:showIn="@layout/activity_highscores">
 
-    <TextView android:id="@+id/highscore1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="PLACEHOLDER 1" />
-
-    <TextView android:id="@+id/highscore2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="PLACEHOLDER 2" />
-
-    <TextView android:id="@+id/highscore3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="PLACEHOLDER 3" />
-
-    <TextView android:id="@+id/highscore4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="PLACEHOLDER 4" />
-
-    <TextView android:id="@+id/highscore5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="PLACEHOLDER 5" />
-
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="510dp">
+    </TableLayout>
 </LinearLayout>

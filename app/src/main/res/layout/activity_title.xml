@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="START TO PLAY"
-        android:id="@+id/button"
-        android:onClick="enterTittleScreen"
+        android:id="@+id/startPlayButton"
+        android:onClick="enterTitleScreen"
         android:layout_weight="1"/>
 
 </LinearLayout>
