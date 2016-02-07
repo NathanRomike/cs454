@@ -16,8 +16,9 @@ import java.util.HashMap;
 
 public class Dictionary {
 
+
     //HashMap that stores the dictionary
-    private static HashMap dictionary;
+    private static HashMap<String, ArrayList<String>> dictionary;
     private static ArrayList<String> hashInput;
 
 
@@ -26,11 +27,9 @@ public class Dictionary {
 		 * file to add all words in the dictionary file to the
 		 * dictionary HashMap
 		 */
-    public Dictionary() throws Exception {
-        dictionary = new HashMap();
-       dictionary = Container.getInstance().getDictionary();
-       // dictionary = new HashMap<String,ArrayList<String>>();
-       //parseData(dictFile);
+    public Dictionary(InputStream dictFile) throws Exception {
+        dictionary = new HashMap<String,ArrayList<String>>();
+        parseData(dictFile);
     }
 
 
@@ -47,7 +46,7 @@ public class Dictionary {
             String nextKey;
 
 
-            dictionary = new HashMap();
+            dictionary = new HashMap<String,ArrayList<String>>();
 
 
             InputStream data = dicFile;
@@ -102,7 +101,7 @@ public class Dictionary {
 
         String sub = input.substring(0, 2);
         if(dictionary.containsKey(sub)){
-            ArrayList<String> wordLists = (ArrayList<String>) dictionary.get(sub);
+            ArrayList<String> wordLists = dictionary.get(sub);
             if(wordLists.contains(input)){
                 return true;
             }
@@ -125,7 +124,7 @@ public class Dictionary {
 
         String sub = input.substring(0, 2);
         if(dictionary.containsKey(sub)){
-            ArrayList<String> wordLists = (ArrayList<String>) dictionary.get(sub);
+            ArrayList<String> wordLists = dictionary.get(sub);
             for(int i = 0; i < wordLists.size(); ++i){
                 int subSize = input.length();
                 int wordSize = wordLists.get(i).length();
@@ -140,5 +139,8 @@ public class Dictionary {
 
         return false;
     }
+
+
+
 
 }

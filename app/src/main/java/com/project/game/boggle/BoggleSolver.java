@@ -12,14 +12,10 @@ import java.util.List;
 
 public class BoggleSolver extends AppCompatActivity {
 
-
     public static ArrayList<String> boggleWordList = new ArrayList<String>();
 
     static String[][] Board;
-
- //public static Dictionary dictionary;
-
-    //public HashMap dictionary;
+    public static Dictionary dictionary;
 
 
     public static void setBoard(List<Character> dice)
@@ -30,7 +26,6 @@ public class BoggleSolver extends AppCompatActivity {
                 {dice.get(8).toString(), dice.get(9).toString(), dice.get(10).toString(), dice.get(11).toString()},
                 {dice.get(12).toString(), dice.get(13).toString(), dice.get(14).toString(), dice.get(15).toString()}};
 
-
     }
 
 
@@ -40,7 +35,7 @@ public class BoggleSolver extends AppCompatActivity {
     }
 
 
-    public static void boggleWordListSearch() {
+    public static void boggleWordListSearch(Dictionary dict) {
 //initialize the board search path
         int[][] searchBoard = {{0, 0, 0, 0},
                 {0, 0, 0, 0},
@@ -49,8 +44,7 @@ public class BoggleSolver extends AppCompatActivity {
 
 
 
-      // dictionary = Container.getInstance().getDictionary();
-
+        dictionary = dict;
 
         //call the boggleWordSearch function for every position on the board
         for (int i = 0; i < 4; ++i) {
@@ -59,10 +53,10 @@ public class BoggleSolver extends AppCompatActivity {
             }
         }
 
-        // Loop through elements.
+        // TODO [john] create popup window for solver
         for (int i = 0; i < boggleWordList.size(); i++) {
             String value = boggleWordList.get(i);
-            System.out.println("Element: " + value);
+            System.out.println(value);
         }
     }
 
@@ -81,8 +75,7 @@ public class BoggleSolver extends AppCompatActivity {
 
 
 
-
-        if (Container.getInstance().isReal(newWord)) {
+        if (dictionary.isReal(newWord)) {
             if (!boggleWordList.contains(newWord)) {
                 boggleWordList.add(newWord);
             }
@@ -96,7 +89,7 @@ public class BoggleSolver extends AppCompatActivity {
             }
 
 
-        } else if (Container.getInstance().isPartOfAWord(newWord)) {
+        } else if (dictionary.isPartOfAWord(newWord)) {
 
             ArrayList<GridPoint> movesList = nextWord(x, y, newPath);
             if (!(movesList.isEmpty())) {

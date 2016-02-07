@@ -2,39 +2,31 @@ package com.project.game.boggle;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.res.AssetManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 
 public class OnePlayer extends FragmentActivity  {
 
 
-    /*
+    private static Dictionary dictionary;
+
     // The following are used for the shake detection
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
-*/
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +34,7 @@ public class OnePlayer extends FragmentActivity  {
         setContentView(R.layout.activity_one_player);
 
 
-/*
+
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -57,7 +49,7 @@ public class OnePlayer extends FragmentActivity  {
 
 
         });
-*/
+
         new CountDownTimer(180000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
@@ -151,13 +143,24 @@ public class OnePlayer extends FragmentActivity  {
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
 
+
+
                 List<Character> dieList = BoardGenerator.getRandomDice();
 
 
-                BoggleSolver.setBoard(dieList);
-                BoggleSolver.boggleWordListSearch();
+                try {
+                    dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
 
-                WordSelection.initQueue();
+
+
+                    BoggleSolver.setBoard(dieList);
+                    BoggleSolver.boggleWordListSearch(dictionary);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
 
             }
         });

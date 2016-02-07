@@ -39,6 +39,7 @@ import android.hardware.SensorManager;
 public class BoardFragment extends Fragment {
 
 
+    private static Dictionary dictionary;
 
 
 
@@ -61,8 +62,18 @@ public class BoardFragment extends Fragment {
         List<Character> dieList = BoardGenerator.getRandomDice();
 
 
-        //BoggleSolver.setBoard(dieList);
-       // BoggleSolver.boggleWordListSearch();
+        try {
+            dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
+
+
+
+        BoggleSolver.setBoard(dieList);
+        BoggleSolver.boggleWordListSearch(dictionary);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         WordSelection.initQueue();
 
