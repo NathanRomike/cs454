@@ -18,15 +18,15 @@ public class WordSelection {
     public static int currX = 0;
     public static int currY = 0;
     public static Map letterQueue = null;
-    public static Map tiles = null;
+    public static Map tileQueue = null;
 
     public static void initQueue() {
         if (letterQueue == null) {
             letterQueue = new LinkedHashMap<String, String>();
-            tiles = new LinkedHashMap<String, View>();
+            tileQueue = new LinkedHashMap<String, View>();
         } else {
             letterQueue.clear();
-            tiles.clear();
+            tileQueue.clear();
         }
     }
 
@@ -52,12 +52,12 @@ public class WordSelection {
 
             Container.getInstance().setWord(word);
             letterQueue.put(key, letter);
-            tiles.put(key, tile);
+            tileQueue.put(key, tile);
             return true;
         } else if ((moveX == 0) && (moveY == 0)) {
             unhighlight(tile, letter);
             letterQueue.remove(key);
-            tiles.remove(tile);
+            tileQueue.remove(key);
 
             if (letterQueue.isEmpty()) {
                 return false;
@@ -93,28 +93,28 @@ public class WordSelection {
 
             Container.getInstance().setWord(word);
             letterQueue.put(key, letter);
-            tiles.put(key, tile);
+            tileQueue.put(key, tile);
             return true;
         } else {
             return false;
         }
     }
 
-    /*public static Boolean unhighlightAll() {
+    public static Boolean unhighlightAll() {
         if (!letterQueue.isEmpty()) {
             Iterator keys = letterQueue.keySet().iterator();
             Iterator letters = letterQueue.values().iterator();
 
             while (keys.hasNext()) {
-                unhighlight((TextView) tiles.get(keys.next()), (Character) letters.next());
+                unhighlight((TextView) tileQueue.get(keys.next()), (Character) letters.next());
             }
 
             letterQueue.clear();
-            tiles.clear();
+            tileQueue.clear();
         }
 
         return true;
-    }*/
+    }
 
     public static void highlight(TextView textView, Character ch) {
         switch (ch.charValue()) {

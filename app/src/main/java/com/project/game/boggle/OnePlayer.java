@@ -1,5 +1,6 @@
 package com.project.game.boggle;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -41,6 +42,11 @@ public class OnePlayer extends FragmentActivity {
         }.start();
     }
 
+    public void onShowWords(View view) {
+        Intent intent = new Intent(this, Words.class);
+        startActivity(intent);
+    }
+
     public void onSubmit(View view) {
         Container container = Container.getInstance();
         String word = container.getWord();
@@ -50,6 +56,7 @@ public class OnePlayer extends FragmentActivity {
             wordSize = word.length();
 
             if (wordSize < 3) {
+                WordSelection.unhighlightAll();
                 return;
             }
         } catch (Exception e) {
@@ -64,6 +71,7 @@ public class OnePlayer extends FragmentActivity {
 
             while (words.hasNext()) {
                 if (word.equals(words.next())) {
+                    WordSelection.unhighlightAll();
                     return;
                 }
             }
@@ -77,6 +85,7 @@ public class OnePlayer extends FragmentActivity {
             container.setWordList(wordList);
             container.setWord(null);
         } else {
+            WordSelection.unhighlightAll();
             return;
         }
 
@@ -100,6 +109,6 @@ public class OnePlayer extends FragmentActivity {
         }
 
         container.setPlayerScore(score);
-        //WordSelection.unhighlightAll();
+        WordSelection.unhighlightAll();
     }
 }
