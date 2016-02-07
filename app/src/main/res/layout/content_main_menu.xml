@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:showIn="@layout/activity_title_screen">
+    tools:showIn="@layout/activity_main_menu">
 
     <LinearLayout
         android:layout_width="wrap_content"

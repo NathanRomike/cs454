@@ -3,7 +3,6 @@ package com.project.game.boggle;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,16 +11,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 
 /**
  * Created by nan on 1/23/16.
  */
-public class Welcome extends AppCompatActivity {
+public class Title extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_title);
 
         HashMap dictionary = new HashMap();
         ArrayList<Integer> highscores = new ArrayList<>();
@@ -65,7 +63,7 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void enterTittleScreen(View view){
-        Intent intent = new Intent(this, TitleScreen.class);
+        Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
 }

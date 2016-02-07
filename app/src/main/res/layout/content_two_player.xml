@@ -15,9 +15,9 @@
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="com.project.game.boggle.GridFragment"
+        android:name="com.project.game.boggle.BoardFragment"
         android:id="@+id/fragment"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        tools:layout="@layout/activity_main" />
+        tools:layout="@layout/content_board" />
 </RelativeLayout>

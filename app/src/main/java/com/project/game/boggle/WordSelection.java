@@ -1,8 +1,12 @@
 package com.project.game.boggle;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,12 +18,15 @@ public class WordSelection {
     public static int currX = 0;
     public static int currY = 0;
     public static Map letterQueue = null;
+    public static Map tiles = null;
 
     public static void initQueue() {
         if (letterQueue == null) {
             letterQueue = new LinkedHashMap<String, String>();
+            tiles = new LinkedHashMap<String, View>();
         } else {
             letterQueue.clear();
+            tiles.clear();
         }
     }
 
@@ -35,19 +42,22 @@ public class WordSelection {
             currX = nextX;
             currY = nextY;
 
-            String temp = Container.getInstance().getWord();
-            if (temp == null) {
-                temp = "" + letter;
-            } else {
-                temp += letter;
-            }
-            Container.getInstance().setWord(temp);
-            letterQueue.put(key, letter);
+            String word = Container.getInstance().getWord();
 
+            if (word == null) {
+                word = "" + letter;
+            } else {
+                word += letter;
+            }
+
+            Container.getInstance().setWord(word);
+            letterQueue.put(key, letter);
+            tiles.put(key, tile);
             return true;
         } else if ((moveX == 0) && (moveY == 0)) {
             unhighlight(tile, letter);
             letterQueue.remove(key);
+            tiles.remove(tile);
 
             if (letterQueue.isEmpty()) {
                 return false;
@@ -57,7 +67,6 @@ public class WordSelection {
             String coors = null;
             int prevX;
             int prevY;
-            Log.d("LETTERQUEUE", "validMove: " + letterQueue.values().toString());
 
             while (letters.hasNext()) {
                 coors = letters.next().toString();
@@ -74,26 +83,38 @@ public class WordSelection {
             currX = nextX;
             currY = nextY;
 
+            String word = Container.getInstance().getWord();
 
-String temp = Container.getInstance().getWord();
-if (temp == null) {
-    temp = "" + letter;
-} else {
-    temp += letter;
-}
-Container.getInstance().setWord(temp);
+            if (word == null) {
+                word = "" + letter;
+            } else {
+                word += letter;
+            }
+
+            Container.getInstance().setWord(word);
             letterQueue.put(key, letter);
-            Log.d("LETTERQUEUE", "validMove: " + letterQueue.values().toString());
+            tiles.put(key, tile);
             return true;
         } else {
             return false;
         }
     }
 
-    public static Boolean unhighlightAll() {
+    /*public static Boolean unhighlightAll() {
+        if (!letterQueue.isEmpty()) {
+            Iterator keys = letterQueue.keySet().iterator();
+            Iterator letters = letterQueue.values().iterator();
+
+            while (keys.hasNext()) {
+                unhighlight((TextView) tiles.get(keys.next()), (Character) letters.next());
+            }
+
+            letterQueue.clear();
+            tiles.clear();
+        }
 
         return true;
-    }
+    }*/
 
     public static void highlight(TextView textView, Character ch) {
         switch (ch.charValue()) {
