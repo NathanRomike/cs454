@@ -9,10 +9,17 @@ import android.view.MenuItem;
 
 public class MainMenu extends AppCompatActivity {
 
+    private String playerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        // receiving player name from title activity
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            playerName = extras.getString("playerName");
+        }
     }
 
     @Override
@@ -39,6 +46,9 @@ public class MainMenu extends AppCompatActivity {
 
     public void onePlayerScreen(View view) {
         Intent intent = new Intent(this, OnePlayer.class);
+        // pass player name from this activity to onePlayer activity
+        intent.putExtra("playerName", playerName);
+
         startActivity(intent);
     }
 
