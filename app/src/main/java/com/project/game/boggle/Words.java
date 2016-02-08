@@ -25,7 +25,7 @@ public class Words extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-        getWindow().setLayout((int) (width * 0.8), (int) (height * 0.7));
+        getWindow().setLayout((int) (width * 0.8), (int) (height * 0.6));
 
         Drawable drawable = new ColorDrawable(Color.WHITE);
         drawable.setAlpha(190);

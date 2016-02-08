@@ -4,8 +4,13 @@ package com.project.game.boggle;
  * Created by Muna on 1/25/16.
  */
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Bundle;
@@ -14,16 +19,39 @@ import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import android.support.v7.app.AppCompatActivity;
+
+import android.content.Context;
+import android.hardware.SensorManager;
+import android.hardware.SensorEventListener;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 
 
 public class BoardFragment extends Fragment {
+
+
+    private static Dictionary dictionary;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle
                                      savedInstanceState) {
+
+
+
+
+
 
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.content_board, container, false);
@@ -32,6 +60,21 @@ public class BoardFragment extends Fragment {
         String packageName = context.getPackageName();
 
         List<Character> dieList = BoardGenerator.getRandomDice();
+
+
+        try {
+            dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
+
+
+
+        BoggleSolver.setBoard(dieList);
+        BoggleSolver.boggleWordListSearch(dictionary);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         WordSelection.initQueue();
 
         final TextView[][] board = new TextView[4][4];
@@ -78,4 +121,6 @@ public class BoardFragment extends Fragment {
 
         return view;
     }
+
+
 }

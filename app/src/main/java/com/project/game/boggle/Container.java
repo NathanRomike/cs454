@@ -90,4 +90,55 @@ public class Container {
 
     private static final Container container = new Container();
     public static Container getInstance() { return container; }
+
+    /*
+  * This will check the entire list of wordList to see if the given word is valid
+  */
+    public boolean isReal(String input){
+
+        if(input.length() < 3){
+            return false;
+        }
+
+        String sub = input.substring(0, 2);
+        if(dictionary.containsKey(sub)){
+            ArrayList<String> wordLists = (ArrayList<String>) dictionary.get(sub);
+            if(wordLists.contains(input)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+    /*
+     * This will check the entire list of wordList to see if the given string
+     * is part of a word
+     */
+    public boolean isPartOfAWord(String input){
+
+        if(input.length() == 1){
+            return true;
+        }
+
+        String sub = input.substring(0, 2);
+        if(dictionary.containsKey(sub)){
+            ArrayList<String> wordLists = (ArrayList<String>) dictionary.get(sub);
+            for(int i = 0; i < wordLists.size(); ++i){
+                int subSize = input.length();
+                int wordSize = wordLists.get(i).length();
+                if(subSize <= wordSize){
+                    String compare = wordLists.get(i).substring(0, subSize);
+                    if(input.equals(compare)){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
