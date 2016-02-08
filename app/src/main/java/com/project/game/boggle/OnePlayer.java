@@ -24,22 +24,17 @@ import java.util.Iterator;
 
 public class OnePlayer extends FragmentActivity {
 
-//    private String playerName;
-//    private Container container;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_one_player);
 
 
         Container container = Container.getInstance();
         TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
-//        playerNameTextField.setText(playerName);
         playerNameTextField.setText(container.getUser());
 
-        new CountDownTimer(18000, 1000) {
+        new CountDownTimer(180000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
             public void onTick(long millisUntilFinished) {
@@ -49,10 +44,7 @@ public class OnePlayer extends FragmentActivity {
             /* TODO stop game and evaluate score */
             public void onFinish() {
                 timerTextField.setText("TIME'S UP!");
-                // update the high score array list
-//                container.setUser(playerName);
                 Container container = Container.getInstance();
-                container.setPlayerScore(100);
                 container.setHighscoresDic(container.getUser(), container.getPlayerScore());
 
                 container.updateHighscores(container.getHighscoresDic());
@@ -129,6 +121,10 @@ public class OnePlayer extends FragmentActivity {
 
         container.setPlayerScore(score);
         WordSelection.unhighlightAll();
+    }
+
+    public void onSolve(View view) {
+
     }
 
     public void goToHighScores(){
