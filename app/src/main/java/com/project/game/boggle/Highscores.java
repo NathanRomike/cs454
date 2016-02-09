@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class Highscores extends AppCompatActivity {
 
     @Override
@@ -16,6 +19,10 @@ public class Highscores extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Container container = Container.getInstance();
+        container.setHighscoresDic(container.getUser(), container.getPlayerScore());
+        container.updateHighscores(container.getHighscoresDic());
     }
 
 }

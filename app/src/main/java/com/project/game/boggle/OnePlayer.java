@@ -1,5 +1,7 @@
 package com.project.game.boggle;
 
+import android.content.Intent;
+import android.content.res.AssetManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import java.util.List;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+
 
 public class OnePlayer extends FragmentActivity  {
 
@@ -33,7 +37,9 @@ public class OnePlayer extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
 
-
+        Container container = Container.getInstance();
+        TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
+        playerNameTextField.setText(container.getUser());
 
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -50,6 +56,7 @@ public class OnePlayer extends FragmentActivity  {
 
         });
 
+
         new CountDownTimer(180000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
@@ -57,15 +64,21 @@ public class OnePlayer extends FragmentActivity  {
                 timerTextField.setText("Timer: " + (millisUntilFinished / 60000) + ":" + ((millisUntilFinished / 1000) % 60));
             }
 
-            /* TODO stop game and evaluate score */
             public void onFinish() {
                 timerTextField.setText("TIME'S UP!");
+                Container container = Container.getInstance();
+                container.setHighscoresDic(container.getUser(), container.getPlayerScore());
+
+                container.updateHighscores(container.getHighscoresDic());
+                goToHighScores();
             }
         }.start();
     }
 
-
-
+    public void onShowWords(View view) {
+        Intent intent = new Intent(this, Words.class);
+        startActivity(intent);
+    }
 
     public void onSubmit(View view) {
         Container container = Container.getInstance();
@@ -76,6 +89,7 @@ public class OnePlayer extends FragmentActivity  {
             wordSize = word.length();
 
             if (wordSize < 3) {
+                WordSelection.unhighlightAll();
                 return;
             }
         } catch (Exception e) {
@@ -90,6 +104,7 @@ public class OnePlayer extends FragmentActivity  {
 
             while (words.hasNext()) {
                 if (word.equals(words.next())) {
+                    WordSelection.unhighlightAll();
                     return;
                 }
             }
@@ -103,6 +118,7 @@ public class OnePlayer extends FragmentActivity  {
             container.setWordList(wordList);
             container.setWord(null);
         } else {
+            WordSelection.unhighlightAll();
             return;
         }
 
@@ -111,22 +127,35 @@ public class OnePlayer extends FragmentActivity  {
 
         switch (wordSize) {
             case 3:  score += 1;
-                     break;
+                break;
             case 4:  score += 1;
-                     break;
+                break;
             case 5:  score += 2;
-                     break;
+                break;
             case 6:  score += 3;
-                     break;
+                break;
             case 7:  score += 5;
-                     break;
+                break;
             case 8:  score += 11;
-                     break;
+                break;
             default: score += 11;
         }
 
         container.setPlayerScore(score);
-        //WordSelection.unhighlightAll();
+        WordSelection.unhighlightAll();
+    }
+
+    public void onSolve(View view) {
+
+    }
+
+    public void goToHighScores(){
+        Intent intent = new Intent(this, Highscores.class);
+        Container container = Container.getInstance();
+        // pass player name from this activity to onePlayer activity
+        intent.putExtra("playerScore", container.getPlayerScore());
+        intent.putExtra("playerName", container.getUser());
+        startActivity(intent);
     }
 
     private void dialogConfirmation()
@@ -156,14 +185,12 @@ public class OnePlayer extends FragmentActivity  {
 
 
 
-
                     BoggleSolver.setBoard(dieList);
                     BoggleSolver.boggleWordListSearch(dictionary);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
 
 
@@ -181,7 +208,6 @@ public class OnePlayer extends FragmentActivity  {
         alertDialog.show();
     }
 
-
     /*
     @Override
     public void onResume() {
@@ -189,7 +215,6 @@ public class OnePlayer extends FragmentActivity  {
         // Add the following line to register the Session Manager Listener onResume
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
-
     @Override
     public void onPause() {
         // Add the following line to unregister the Sensor Manager onPause
