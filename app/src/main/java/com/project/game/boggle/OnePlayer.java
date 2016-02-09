@@ -64,6 +64,9 @@ public class OnePlayer extends FragmentActivity  {
         }.start();
     }
 
+
+
+
     public void onSubmit(View view) {
         Container container = Container.getInstance();
         String word = container.getWord();
@@ -153,12 +156,14 @@ public class OnePlayer extends FragmentActivity  {
 
 
 
+
                     BoggleSolver.setBoard(dieList);
                     BoggleSolver.boggleWordListSearch(dictionary);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
 
 
 
@@ -175,6 +180,7 @@ public class OnePlayer extends FragmentActivity  {
         // Showing Alert Message
         alertDialog.show();
     }
+
 
     /*
     @Override
