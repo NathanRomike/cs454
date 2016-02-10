@@ -99,6 +99,7 @@ public class OnePlayer extends FragmentActivity  {
 
         ArrayList<String> wordList = container.getWordList();
 
+        //if(wordList!=null)
         if (!wordList.isEmpty()) {
             Iterator words = wordList.iterator();
 
