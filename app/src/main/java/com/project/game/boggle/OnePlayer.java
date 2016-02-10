@@ -22,11 +22,7 @@ import android.hardware.SensorManager;
 
 
 public class OnePlayer extends FragmentActivity  {
-
-
     private static Dictionary dictionary;
-
-    // The following are used for the shake detection
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
@@ -41,6 +37,7 @@ public class OnePlayer extends FragmentActivity  {
         TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
         playerNameTextField.setText(container.getUser());
 
+
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -48,12 +45,8 @@ public class OnePlayer extends FragmentActivity  {
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
             public void onShake(int count) {
-
                 dialogConfirmation();
-
             }
-
-
         });
 
 
@@ -83,6 +76,7 @@ public class OnePlayer extends FragmentActivity  {
     public void onSubmit(View view) {
         Container container = Container.getInstance();
         String word = container.getWord();
+        word = word.toLowerCase();
         int wordSize;
 
         try {
@@ -110,8 +104,6 @@ public class OnePlayer extends FragmentActivity  {
             }
         }
 
-
-        word = word.toLowerCase();
 
         if (Container.getInstance().getDictionary().containsKey(word)) {
             wordList.add(word);
@@ -147,7 +139,7 @@ public class OnePlayer extends FragmentActivity  {
         // update the score displayed on top of screen
         TextView scoreTextField = (TextView) findViewById(R.id.user_score);
         int scoreAsInt = container.getPlayerScore();
-        String scoreAsString = Integer.toString(scoreAsInt);
+        String scoreAsString = "Score: " + Integer.toString(scoreAsInt);
         scoreTextField.setText(scoreAsString);
     }
 
@@ -180,16 +172,10 @@ public class OnePlayer extends FragmentActivity  {
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
-
-
-
                 List<Character> dieList = BoardGenerator.getRandomDice();
-
 
                 try {
                     dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
-
-
 
                     BoggleSolver.setBoard(dieList);
                     BoggleSolver.boggleWordListSearch(dictionary);
@@ -197,9 +183,6 @@ public class OnePlayer extends FragmentActivity  {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-
             }
         });
 
@@ -214,7 +197,6 @@ public class OnePlayer extends FragmentActivity  {
         alertDialog.show();
     }
 
-    /*
     @Override
     public void onResume() {
         super.onResume();
@@ -228,6 +210,5 @@ public class OnePlayer extends FragmentActivity  {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
     }
-*/
 
 }
