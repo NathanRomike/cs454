@@ -29,6 +29,8 @@ public class Container {
     public HashMap getDictionary() { return dictionary; }
     public void setDictionary(HashMap dictionary) { this.dictionary = dictionary; }
 //    public ArrayList<HashMap<String, Integer>> setHighscores(){}
+    // each element in ArrayList is a HashMap
+    // each HashMap contain one key(player name) value(player score) pair
     public ArrayList<HashMap<String, Integer>> getHighscores() { return highscores; }
     // this function will update the highscore
     // this array list only contain 10 elements.

@@ -33,9 +33,8 @@ public class OnePlayer extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
 
-        Container container = Container.getInstance();
-        TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
-        playerNameTextField.setText(container.getUser());
+        // display player name on middle of top screen
+        displayPlayerName();
 
 
         // ShakeDetector initialization
@@ -57,12 +56,15 @@ public class OnePlayer extends FragmentActivity  {
                 timerTextField.setText("Timer: " + (millisUntilFinished / 60000) + ":" + ((millisUntilFinished / 1000) % 60));
             }
 
+            // when time is up, set the time display "Time's up!"
+            // set hightscore into container highscorcDic
+            // if it is one of top ten highscore, update highscore ArrayList
             public void onFinish() {
                 timerTextField.setText("TIME'S UP!");
                 Container container = Container.getInstance();
                 container.setHighscoresDic(container.getUser(), container.getPlayerScore());
-
                 container.updateHighscores(container.getHighscoresDic());
+                // go to highscore activity from this OnePlayer activity
                 goToHighScores();
             }
         }.start();
@@ -136,16 +138,29 @@ public class OnePlayer extends FragmentActivity  {
         container.setPlayerScore(score);
         WordSelection.unhighlightAll();
 
-        // update the score displayed on top of screen
+        // update the score displayed on top left of screen every time hit submit button
+        updateScoreOnTop();
+    }
+
+    public void displayPlayerName(){
+        Container container = Container.getInstance();
+        TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
+        playerNameTextField.setText(container.getUser());
+    }
+
+    public void updateScoreOnTop(){
+        Container container = Container.getInstance();
         TextView scoreTextField = (TextView) findViewById(R.id.user_score);
         int scoreAsInt = container.getPlayerScore();
         String scoreAsString = "Score: " + Integer.toString(scoreAsInt);
         scoreTextField.setText(scoreAsString);
     }
 
+
     public void onSolve(View view) {
 
     }
+
 
     public void goToHighScores(){
         Intent intent = new Intent(this, Highscores.class);
