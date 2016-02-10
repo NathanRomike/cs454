@@ -74,7 +74,6 @@ public class BoardFragment extends Fragment {
             e.printStackTrace();
         }
 
-
         WordSelection.initQueue();
 
         final TextView[][] board = new TextView[4][4];
@@ -121,6 +120,4 @@ public class BoardFragment extends Fragment {
 
         return view;
     }
-
-
 }
