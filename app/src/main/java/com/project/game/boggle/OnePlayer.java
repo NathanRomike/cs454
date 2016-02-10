@@ -143,6 +143,12 @@ public class OnePlayer extends FragmentActivity  {
 
         container.setPlayerScore(score);
         WordSelection.unhighlightAll();
+
+        // update the score displayed on top of screen
+        TextView scoreTextField = (TextView) findViewById(R.id.user_score);
+        int scoreAsInt = container.getPlayerScore();
+        String scoreAsString = Integer.toString(scoreAsInt);
+        scoreTextField.setText(scoreAsString);
     }
 
     public void onSolve(View view) {

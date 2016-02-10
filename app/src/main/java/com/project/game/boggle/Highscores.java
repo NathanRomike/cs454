@@ -22,12 +22,21 @@ public class Highscores extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Since highscore activity has 20 textViews
+        // this is the algorithm allow me to loop on the textView
+        // and set the each textView to display player name and their score
+        displayTopTenScore();
+
+    }
+
+    public void displayTopTenScore(){
         Container container = Container.getInstance();
         int length = container.getHighscores().size();
 
-        for (int i = 1; i < length + 1; i++) {
-            int j = i + 10;
-            String playerTextViewID = "highscoreTextView"+ i;
+        for (int i = 0; i < length; i++) {
+            int j = i + 10 + 1;
+            int k = i + 1;
+            String playerTextViewID = "highscoreTextView"+ k;
             String scoreTextViewID = "highscoreTextView" + j;
             int playerID = getResources().getIdentifier(playerTextViewID, "id", getPackageName());
             int scoreID = getResources().getIdentifier(scoreTextViewID, "id", getPackageName());
@@ -40,7 +49,7 @@ public class Highscores extends AppCompatActivity {
                 Iterator listIndex = container.getHighscores().get(i).keySet().iterator();
                 String listKey = (String)listIndex.next();
                 playerTextView.setText(listKey);
-                scoreTextView.setText(container.getHighscores().get(i).get(listKey));
+                scoreTextView.setText(Integer.toString(container.getHighscores().get(i).get(listKey)));
 
             }
         }
