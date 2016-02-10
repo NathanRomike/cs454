@@ -22,11 +22,7 @@ import android.hardware.SensorManager;
 
 
 public class OnePlayer extends FragmentActivity  {
-
-
     private static Dictionary dictionary;
-
-    // The following are used for the shake detection
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
@@ -37,9 +33,9 @@ public class OnePlayer extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
 
-        Container container = Container.getInstance();
-        TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
-        playerNameTextField.setText(container.getUser());
+        // display player name on middle of top screen
+        displayPlayerName();
+
 
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -48,12 +44,8 @@ public class OnePlayer extends FragmentActivity  {
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
             public void onShake(int count) {
-
                 dialogConfirmation();
-
             }
-
-
         });
 
 
@@ -64,12 +56,15 @@ public class OnePlayer extends FragmentActivity  {
                 timerTextField.setText("Timer: " + (millisUntilFinished / 60000) + ":" + ((millisUntilFinished / 1000) % 60));
             }
 
+            // when time is up, set the time display "Time's up!"
+            // set hightscore into container highscorcDic
+            // if it is one of top ten highscore, update highscore ArrayList
             public void onFinish() {
                 timerTextField.setText("TIME'S UP!");
                 Container container = Container.getInstance();
                 container.setHighscoresDic(container.getUser(), container.getPlayerScore());
-
                 container.updateHighscores(container.getHighscoresDic());
+                // go to highscore activity from this OnePlayer activity
                 goToHighScores();
             }
         }.start();
@@ -83,6 +78,7 @@ public class OnePlayer extends FragmentActivity  {
     public void onSubmit(View view) {
         Container container = Container.getInstance();
         String word = container.getWord();
+        word = word.toLowerCase();
         int wordSize;
 
         try {
@@ -111,8 +107,6 @@ public class OnePlayer extends FragmentActivity  {
             }
         }
 
-
-        word = word.toLowerCase();
 
         if (Container.getInstance().getDictionary().containsKey(word)) {
             wordList.add(word);
@@ -144,11 +138,30 @@ public class OnePlayer extends FragmentActivity  {
 
         container.setPlayerScore(score);
         WordSelection.unhighlightAll();
+
+        // update the score displayed on top left of screen every time hit submit button
+        updateScoreOnTop();
     }
+
+    public void displayPlayerName(){
+        Container container = Container.getInstance();
+        TextView playerNameTextField  = (TextView) findViewById(R.id.user_name);
+        playerNameTextField.setText(container.getUser());
+    }
+
+    public void updateScoreOnTop(){
+        Container container = Container.getInstance();
+        TextView scoreTextField = (TextView) findViewById(R.id.user_score);
+        int scoreAsInt = container.getPlayerScore();
+        String scoreAsString = "Score: " + Integer.toString(scoreAsInt);
+        scoreTextField.setText(scoreAsString);
+    }
+
 
     public void onSolve(View view) {
 
     }
+
 
     public void goToHighScores(){
         Intent intent = new Intent(this, Highscores.class);
@@ -175,16 +188,10 @@ public class OnePlayer extends FragmentActivity  {
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
-
-
-
                 List<Character> dieList = BoardGenerator.getRandomDice();
-
 
                 try {
                     dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
-
-
 
                     BoggleSolver.setBoard(dieList);
                     BoggleSolver.boggleWordListSearch(dictionary);
@@ -192,9 +199,6 @@ public class OnePlayer extends FragmentActivity  {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-
             }
         });
 
@@ -209,7 +213,6 @@ public class OnePlayer extends FragmentActivity  {
         alertDialog.show();
     }
 
-    /*
     @Override
     public void onResume() {
         super.onResume();
@@ -222,6 +225,5 @@ public class OnePlayer extends FragmentActivity  {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
     }
-*/
 
 }
