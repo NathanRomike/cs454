@@ -33,6 +33,8 @@ public class Container {
     public void setSolution(ArrayList<String> solution) { this.solution = solution; }
 
 //    public ArrayList<HashMap<String, Integer>> setHighscores(){}
+    // each element in ArrayList is a HashMap
+    // each HashMap contain one key(player name) value(player score) pair
     public ArrayList<HashMap<String, Integer>> getHighscores() { return highscores; }
     // this function will update the highscore
     // this array list only contain 10 elements.
