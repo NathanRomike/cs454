@@ -48,7 +48,6 @@ public class MainMenu extends AppCompatActivity {
         Intent intent = new Intent(this, OnePlayer.class);
         // pass player name from this activity to onePlayer activity
         intent.putExtra("playerName", playerName);
-
         startActivity(intent);
     }
 

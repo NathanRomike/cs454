@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 
 import android.support.v4.app.FragmentActivity;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,6 +33,12 @@ public class OnePlayer extends FragmentActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        getWindow().setLayout(width, height);
 
         // display player name on middle of top screen
         displayPlayerName();
@@ -86,6 +93,7 @@ public class OnePlayer extends FragmentActivity  {
 
             if (wordSize < 3) {
                 WordSelection.unhighlightAll();
+                container.setWord(null);
                 return;
             }
         } catch (Exception e) {
@@ -95,13 +103,13 @@ public class OnePlayer extends FragmentActivity  {
 
         ArrayList<String> wordList = container.getWordList();
 
-        //if(wordList!=null)
         if (!wordList.isEmpty()) {
             Iterator words = wordList.iterator();
 
             while (words.hasNext()) {
                 if (word.equals(words.next())) {
                     WordSelection.unhighlightAll();
+                    container.setWord(null);
                     return;
                 }
             }
@@ -114,14 +122,13 @@ public class OnePlayer extends FragmentActivity  {
             container.setWord(null);
         } else {
             WordSelection.unhighlightAll();
+            container.setWord(null);
             return;
         }
 
 
         int score = container.getPlayerScore();
 
-
-        /*
         switch (wordSize) {
             case 3:  score += 1;
                 break;
@@ -137,42 +144,12 @@ public class OnePlayer extends FragmentActivity  {
                 break;
             default: score += 11;
         }
-        */
 
-        //next I call score method to update player score
-        container.setPlayerScore(score+score(wordSize));
+        container.setPlayerScore(score);
         WordSelection.unhighlightAll();
 
         // update the score displayed on top left of screen every time hit submit button
         updateScoreOnTop();
-    }
-
-    public static int score(int wordSize)
-    {
-        int score=0;
-
-        switch (wordSize) {
-            case 3:  score += 1;
-                return score;
-                //break;
-            case 4:  score += 1;
-                return score;
-                //break;
-            case 5:  score += 2;
-                return score;
-                //break;
-            case 6:  score += 3;
-                return score;
-                //break;
-            case 7:  score += 5;
-                return score;
-                //break;
-            case 8:  score += 11;
-                return score;
-                //break;
-            default: score += 11;
-                return score;
-        }
     }
 
     public void displayPlayerName(){
@@ -191,7 +168,8 @@ public class OnePlayer extends FragmentActivity  {
 
 
     public void onSolve(View view) {
-
+        Intent intent = new Intent(this, Solution.class);
+        startActivity(intent);
     }
 
 
@@ -251,11 +229,11 @@ public class OnePlayer extends FragmentActivity  {
         // Add the following line to register the Session Manager Listener onResume
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
+
     @Override
     public void onPause() {
         // Add the following line to unregister the Sensor Manager onPause
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
     }
-
 }

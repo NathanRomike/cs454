@@ -53,7 +53,6 @@ public class BoggleSolver extends AppCompatActivity {
             }
         }
 
-        // TODO [john] create popup window for solver
         for (int i = 0; i < boggleWordList.size(); i++) {
             String value = boggleWordList.get(i);
             System.out.println(value);
@@ -66,14 +65,10 @@ public class BoggleSolver extends AppCompatActivity {
 	 * words that can be highlighted starting at that point
 	 */
     public static void boggleWordSearch(String word, int x, int y, int[][] path) {
-
-
         int[][] newPath = new int[4][4];
         copyPath(path, newPath);
         newPath[y][x] = 1;
         String newWord = word + getLetter(x, y).toLowerCase();
-
-
 
         if (dictionary.isReal(newWord)) {
             if (!boggleWordList.contains(newWord)) {
@@ -81,27 +76,25 @@ public class BoggleSolver extends AppCompatActivity {
             }
 
             ArrayList<GridPoint> movesList = nextWord(x, y, newPath);
+
             if (!(movesList.isEmpty())) {
                 for (int i = 0; i < movesList.size(); ++i) {
                     GridPoint next = movesList.get(i);
                     boggleWordSearch(newWord, next.x, next.y, newPath);
                 }
             }
-
-
         } else if (dictionary.isPartOfAWord(newWord)) {
-
             ArrayList<GridPoint> movesList = nextWord(x, y, newPath);
+
             if (!(movesList.isEmpty())) {
                 for (int i = 0; i < movesList.size(); ++i) {
                     GridPoint next = movesList.get(i);
                     boggleWordSearch(newWord, next.x, next.y, newPath);
                 }
-
             }
         }
-
-
+        
+        Container.getInstance().setSolution(boggleWordList);
     }
 
 
