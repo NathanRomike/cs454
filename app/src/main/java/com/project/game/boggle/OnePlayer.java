@@ -120,6 +120,8 @@ public class OnePlayer extends FragmentActivity  {
 
         int score = container.getPlayerScore();
 
+
+        /*
         switch (wordSize) {
             case 3:  score += 1;
                 break;
@@ -135,12 +137,42 @@ public class OnePlayer extends FragmentActivity  {
                 break;
             default: score += 11;
         }
+        */
 
-        container.setPlayerScore(score);
+        //next I call score method to update player score
+        container.setPlayerScore(score+score(wordSize));
         WordSelection.unhighlightAll();
 
         // update the score displayed on top left of screen every time hit submit button
         updateScoreOnTop();
+    }
+
+    public static int score(int wordSize)
+    {
+        int score=0;
+
+        switch (wordSize) {
+            case 3:  score += 1;
+                return score;
+                //break;
+            case 4:  score += 1;
+                return score;
+                //break;
+            case 5:  score += 2;
+                return score;
+                //break;
+            case 6:  score += 3;
+                return score;
+                //break;
+            case 7:  score += 5;
+                return score;
+                //break;
+            case 8:  score += 11;
+                return score;
+                //break;
+            default: score += 11;
+                return score;
+        }
     }
 
     public void displayPlayerName(){
