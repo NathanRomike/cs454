@@ -13,6 +13,7 @@ public class Container {
     private static final String HIGHSCORES = "highscores.txt";
 
     private HashMap dictionary;            // Dictionary of valid words
+    private ArrayList<String> solution;
     private ArrayList<HashMap<String, Integer>> highscores; // List of highscores
     // need dictionary data type to hold highscores and the player name
     private HashMap<String, Integer> highscoresDic;
@@ -28,6 +29,9 @@ public class Container {
 
     public HashMap getDictionary() { return dictionary; }
     public void setDictionary(HashMap dictionary) { this.dictionary = dictionary; }
+    public ArrayList<String> getSolution() { return solution; }
+    public void setSolution(ArrayList<String> solution) { this.solution = solution; }
+
 //    public ArrayList<HashMap<String, Integer>> setHighscores(){}
     public ArrayList<HashMap<String, Integer>> getHighscores() { return highscores; }
     // this function will update the highscore
@@ -70,6 +74,7 @@ public class Container {
         }
         return -1;
     }
+
     public ArrayList<String> getWordList() { return wordList; }
     public void setWordList(ArrayList<String> wordList) { this.wordList = wordList; }
     public String getWord() { return word; }
@@ -90,5 +95,4 @@ public class Container {
 
     private static final Container container = new Container();
     public static Container getInstance() { return container; }
-
 }
