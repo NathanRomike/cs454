@@ -9,6 +9,7 @@
     <string name="title_activity_two_player">Two Player</string>
     <string name="title_activity_highscores">Highscores</string>
     <string name="title_popup_words_list">Words List</string>
+    <string name="title_popup_solution">Solution</string>
 
     <string name="user_score">Score: 0</string>
     <string name="user_name">Jhasbun</string>
@@ -18,4 +19,5 @@
     <string name="solve_button">Solve</string>
     <string name="words_list_empty">You have not found any words yet!</string>
     <string name="words_list_not_empty">You have found the following words:</string>
+    <string name="solution_title">Solution:</string>
 </resources>

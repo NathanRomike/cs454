@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 
 import android.support.v4.app.FragmentActivity;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,6 +33,12 @@ public class OnePlayer extends FragmentActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        getWindow().setLayout(width, height);
 
         // display player name on middle of top screen
         displayPlayerName();
@@ -86,6 +93,7 @@ public class OnePlayer extends FragmentActivity  {
 
             if (wordSize < 3) {
                 WordSelection.unhighlightAll();
+                container.setWord(null);
                 return;
             }
         } catch (Exception e) {
@@ -101,6 +109,7 @@ public class OnePlayer extends FragmentActivity  {
             while (words.hasNext()) {
                 if (word.equals(words.next())) {
                     WordSelection.unhighlightAll();
+                    container.setWord(null);
                     return;
                 }
             }
@@ -113,6 +122,7 @@ public class OnePlayer extends FragmentActivity  {
             container.setWord(null);
         } else {
             WordSelection.unhighlightAll();
+            container.setWord(null);
             return;
         }
 
@@ -158,7 +168,8 @@ public class OnePlayer extends FragmentActivity  {
 
 
     public void onSolve(View view) {
-
+        Intent intent = new Intent(this, Solution.class);
+        startActivity(intent);
     }
 
 
@@ -225,5 +236,4 @@ public class OnePlayer extends FragmentActivity  {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
     }
-
 }

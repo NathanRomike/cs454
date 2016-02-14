@@ -30,6 +30,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
+        <activity android:name=".Words"
+            android:label="@string/title_popup_words_list"
+            android:theme="@style/AppTheme.popup">
+        </activity>
+        <activity android:name=".Solution"
+            android:label="@string/title_popup_solution"
+            android:theme="@style/AppTheme.popup">
+        </activity>
         <activity android:name=".TwoPlayer"
             android:label="@string/title_activity_two_player"
             android:parentActivityName=".MainMenu"
@@ -45,10 +53,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
-        </activity>
-        <activity android:name=".Words"
-            android:label="@string/title_popup_words_list"
-            android:theme="@style/AppTheme.popup">
         </activity>
     </application>
 
