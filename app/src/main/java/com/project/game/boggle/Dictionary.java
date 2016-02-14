@@ -51,6 +51,8 @@ public class Dictionary {
 
             InputStream data = dicFile;
 
+
+
             DataInputStream input = new DataInputStream(data);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(input));

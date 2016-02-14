@@ -131,17 +131,17 @@ public class OnePlayer extends FragmentActivity  {
 
         switch (wordSize) {
             case 3:  score += 1;
-                     break;
+                break;
             case 4:  score += 1;
-                     break;
+                break;
             case 5:  score += 2;
-                     break;
+                break;
             case 6:  score += 3;
-                     break;
+                break;
             case 7:  score += 5;
-                     break;
+                break;
             case 8:  score += 11;
-                     break;
+                break;
             default: score += 11;
         }
 
