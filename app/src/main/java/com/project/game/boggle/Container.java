@@ -5,15 +5,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+//import java.io.FileOutputStream;
+//import java.io.File;
+//import android.content.res.AssetManager;
+//import android.content.res.Resources;
 
 
 public class Container {
 
     private static final String DICTIONARY = "english-dictionary.txt";
+
+
     private static final String HIGHSCORES = "highscores.txt";
 
     private HashMap dictionary;            // Dictionary of valid words
     private ArrayList<String> solution;
+
+
+
     private ArrayList<HashMap<String, Integer>> highscores; // List of highscores
     // need dictionary data type to hold highscores and the player name
     private HashMap<String, Integer> highscoresDic;
@@ -26,7 +35,7 @@ public class Container {
     private int playerScore; // Player score
     private String user;     // Username
 
-
+    public static String getHIGHSCORES() {return HIGHSCORES;}
     public HashMap getDictionary() { return dictionary; }
     public void setDictionary(HashMap dictionary) { this.dictionary = dictionary; }
     public ArrayList<String> getSolution() { return solution; }
@@ -36,6 +45,9 @@ public class Container {
     // each element in ArrayList is a HashMap
     // each HashMap contain one key(player name) value(player score) pair
     public ArrayList<HashMap<String, Integer>> getHighscores() { return highscores; }
+    public void setHighscores(ArrayList<HashMap<String, Integer>> highscores) {
+        this.highscores = highscores;
+    }
     // this function will update the highscore
     // this array list only contain 10 elements.
     // have to delete last element when there a new highscore appear
@@ -97,4 +109,15 @@ public class Container {
 
     private static final Container container = new Container();
     public static Container getInstance() { return container; }
+
+//    public void writeToFile(){
+//
+//        AssetManager am = getAssets();
+//        File file = new File(getAssets() + HIGHSCORES);
+//
+//
+//        if (!file.exists()) {
+//            file.createNewFile();
+//        }
+//    }
 }
