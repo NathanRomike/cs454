@@ -200,15 +200,8 @@ public class OnePlayer extends FragmentActivity  {
             public void onClick(DialogInterface dialog,int which) {
                 List<Character> dieList = BoardGenerator.getRandomDice();
 
-                try {
-                    dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
-
-                    BoggleSolver.setBoard(dieList);
-                    BoggleSolver.boggleWordListSearch(dictionary);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                finish();
+                startActivity(getIntent());
             }
         });
 
