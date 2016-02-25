@@ -64,6 +64,7 @@ public class BoggleTest {
     ////////////////////////////////////////////////
     ////////////////////////////////////////////////
 
+    /*
 
     @Test
     public void testWordLen3() throws Exception {
@@ -213,7 +214,7 @@ public class BoggleTest {
 
     }
 
-
+*/
 
 
 }
