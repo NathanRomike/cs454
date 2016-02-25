@@ -370,6 +370,4 @@ public class OnePlayer extends FragmentActivity {
         }
         return rank;
     }
-
-
 }
