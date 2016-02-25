@@ -104,7 +104,7 @@ public class BoggleTest {
 
         Container.getInstance().setWord("banana");
         System.out.println();
-        assertEquals("The score for a correct word with length 5 should be 1!"
+        assertEquals("The score for a correct word with length 5 should be 3!"
                 , 3, OnePlayer.score(Container.getInstance().getWord().length()));
 
     }
@@ -126,7 +126,7 @@ public class BoggleTest {
 
         Container.getInstance().setWord("abashing");
         System.out.println();
-        assertEquals("The score for a correct word with length 5 should be 1!"
+        assertEquals("The score for a correct word with length 5 should be 11!"
                 , 11, OnePlayer.score(Container.getInstance().getWord().length()));
 
     }
@@ -137,7 +137,7 @@ public class BoggleTest {
 
         Container.getInstance().setWord("abarticular");
         System.out.println();
-        assertEquals("The score for a correct word with length 5 should be 1!"
+        assertEquals("The score for a correct word with length 5 should be 11 !"
                 , 11, OnePlayer.score(Container.getInstance().getWord().length()));
 
     }
