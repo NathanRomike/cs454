@@ -54,6 +54,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
+        <activity android:name=".Help"
+            android:label="@string/activity_help"
+            android:parentActivityName=".MainMenu"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenu" />
+        </activity>
     </application>
 
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
