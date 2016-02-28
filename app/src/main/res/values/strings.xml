@@ -20,4 +20,7 @@
     <string name="words_list_empty">You have not found any words yet!</string>
     <string name="words_list_not_empty">You have found the following words:</string>
     <string name="solution_title">Solution:</string>
+
+
 </resources>
+
