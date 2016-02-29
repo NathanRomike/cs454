@@ -52,7 +52,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void twoPlayerScreen(View view) {
-        Intent intent = new Intent(this, TwoPlayer.class);
+        Intent intent = new Intent(this, DeviceListActivity.class);
         startActivity(intent);
     }
 
