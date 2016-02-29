@@ -43,5 +43,8 @@
     <!-- Options Menu -->
     <string name="connect">Connect a device</string>
     <string name="discoverable">Make discoverable</string>
+    <string name="title_activity_bluetoothChat">Bluetooth Chat</string>
+    <string name="title_activity_deviceListActivity">Device List</string>
+
 </resources>
 
