@@ -40,7 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * This is the main Activity that displays the current chat session.
+ * This is the bluetooth_main Activity that displays the current chat session.
  */
 public class BluetoothChat extends Activity {
     // Debugging
@@ -87,7 +87,7 @@ public class BluetoothChat extends Activity {
 
         // Set up the window layout
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-        setContentView(R.layout.main);
+        setContentView(R.layout.bluetooth_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
 
         // Set up the custom title

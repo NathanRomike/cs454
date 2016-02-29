@@ -15,7 +15,6 @@ public class TwoPlayer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player);
-
     }
 
     public void registerService(int port) {
