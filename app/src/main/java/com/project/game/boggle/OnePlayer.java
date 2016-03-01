@@ -253,8 +253,6 @@ public class OnePlayer extends FragmentActivity {
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                List<Character> dieList = BoardGenerator.getRandomDice();
-
                 finish();
                 startActivity(getIntent());
             }
