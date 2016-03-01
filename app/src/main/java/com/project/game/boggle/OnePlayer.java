@@ -384,10 +384,4 @@ public class OnePlayer extends FragmentActivity {
         }
         return rank;
     }
-<<<<<<< HEAD
 }
-=======
-
-
-}
->>>>>>> munafahad-master
