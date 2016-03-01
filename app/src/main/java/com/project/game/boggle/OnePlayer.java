@@ -131,10 +131,32 @@ public class OnePlayer extends FragmentActivity {
         startActivity(intent);
     }
 
+
     public void onSubmit(View view) {
         Container container = Container.getInstance();
         String word = container.getWord();
         word = word.toLowerCase();
+        int wordSize=word.length();
+
+
+
+        submitWord(word);
+
+
+        int score = container.getPlayerScore();
+        score += computeScore(wordSize);
+
+        container.setPlayerScore(score);
+        WordSelection.unhighlightAll();
+
+        // update the score displayed on top left of screen every time hit submit button
+        updateScoreOnTop();
+    }
+
+
+    public static void submitWord(String word)
+    {
+        Container container = Container.getInstance();
         int wordSize;
 
         try {
@@ -175,10 +197,25 @@ public class OnePlayer extends FragmentActivity {
             return;
         }
 
+    }
 
-        int score = container.getPlayerScore();
+
+
+    public static int computeScore(int wordSize){
+
+        Container container = Container.getInstance();
+        int score =container.getPlayerScore();
 
         switch (wordSize) {
+            case 0:
+                score +=0;
+                break;
+            case 1:
+                score +=0;
+                break;
+            case 2:
+                score += 0;
+                break;
             case 3:
                 score += 1;
                 break;
@@ -202,11 +239,9 @@ public class OnePlayer extends FragmentActivity {
         }
 
         container.setPlayerScore(score);
-        WordSelection.unhighlightAll();
-
-        // update the score displayed on top left of screen every time hit submit button
-        updateScoreOnTop();
+        return score;
     }
+
 
     public void displayPlayerName() {
         Container container = Container.getInstance();
@@ -253,21 +288,6 @@ public class OnePlayer extends FragmentActivity {
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
-                /*
-                List<Character> dieList = BoardGenerator.getRandomDice();
-
-                try {
-                    dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
-
-                    BoggleSolver.setBoard(dieList);
-                    BoggleSolver.boggleWordListSearch(dictionary);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                */
-
 
                 finish();
                 startActivity(getIntent());
