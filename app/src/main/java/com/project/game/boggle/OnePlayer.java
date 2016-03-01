@@ -253,6 +253,22 @@ public class OnePlayer extends FragmentActivity {
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+
+                /*
+                List<Character> dieList = BoardGenerator.getRandomDice();
+
+                try {
+                    dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
+
+                    BoggleSolver.setBoard(dieList);
+                    BoggleSolver.boggleWordListSearch(dictionary);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                */
+
+
                 finish();
                 startActivity(getIntent());
             }
@@ -368,4 +384,10 @@ public class OnePlayer extends FragmentActivity {
         }
         return rank;
     }
+<<<<<<< HEAD
 }
+=======
+
+
+}
+>>>>>>> munafahad-master
