@@ -289,6 +289,9 @@ public class OnePlayer extends FragmentActivity {
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
+                //to reset the board for one player only
+                Container.getInstance().getBoard().clear();
+
                 finish();
                 startActivity(getIntent());
 

@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 //import java.io.FileOutputStream;
 //import java.io.File;
@@ -19,9 +20,10 @@ public class Container {
     private static final String HIGHSCORES = "highscores.txt";
 
     private HashMap dictionary;            // Dictionary of valid words
-    private ArrayList<String> solution;
+    private ArrayList<String> solution; //board solution
 
 
+    private static List<Character> board = new ArrayList<Character>(); //board with 16 letters
 
     private ArrayList<HashMap<String, Integer>> highscores; // List of highscores
     // need dictionary data type to hold highscores and the player name
@@ -34,6 +36,10 @@ public class Container {
     private int player;      // Player #
     private int playerScore; // Player score
     private String user;     // Username
+
+    public void setBoard(List<Character> brd){this.board=brd;}
+    public static List<Character> getBoard() {return board;}
+
 
     public static String getHIGHSCORES() {return HIGHSCORES;}
     public HashMap getDictionary() { return dictionary; }

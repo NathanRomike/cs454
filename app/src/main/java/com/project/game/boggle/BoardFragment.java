@@ -41,7 +41,7 @@ public class BoardFragment extends Fragment {
 
     private static Dictionary dictionary;
 
-
+    private static List<Character> dieList;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -59,15 +59,27 @@ public class BoardFragment extends Fragment {
         Resources r = context.getResources();
         String packageName = context.getPackageName();
 
-        List<Character> dieList = BoardGenerator.getRandomDice();
 
+        dieList = new ArrayList<Character>();
+
+        if(Container.getInstance().getBoard().size() == 0) {
+            this.setBoard(); // to generate a new board. dieList = BoardGenerator.getRandomDice();
+        }
+        else
+        {
+            dieList=Container.getInstance().getBoard();
+        }
+
+
+        //dieList=Container.getInstance().getBoard();
 
         try {
             dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
 
 
 
-            BoggleSolver.setBoard(dieList);
+            //BoggleSolver.setBoard(dieList);
+            BoggleSolver.setBoard(Container.getInstance().getBoard());
             BoggleSolver.boggleWordListSearch(dictionary);
 
         } catch (Exception e) {
@@ -120,6 +132,17 @@ public class BoardFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public static void setBoard()
+    {
+        dieList  = BoardGenerator.getRandomDice();
+        Container.getInstance().setBoard(dieList);
+    }
+    public static List<Character> getBoard()
+    {
+        //return dieList;
+        return Container.getInstance().getBoard();
     }
 
 
