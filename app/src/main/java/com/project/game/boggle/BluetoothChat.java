@@ -68,7 +68,6 @@ public class BluetoothChat extends FragmentActivity {
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
 
-
     //Message Codes embedded as the first char in every message
     public static final int GAME_MODE = 0;
     public static final int BOGGLE_BOARD = 1;
@@ -79,7 +78,6 @@ public class BluetoothChat extends FragmentActivity {
     public static final int END_GAME = 6;
     public static final int CHAT = 7;
 
-
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -88,7 +86,6 @@ public class BluetoothChat extends FragmentActivity {
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
-
     //Boolean to determine if game mode is Basic or cutThroat
     private boolean isCutThroat = false;
     //Boolean to determine if device is Master or Slave
@@ -96,43 +93,32 @@ public class BluetoothChat extends FragmentActivity {
     //Boolean to determine if the game is running
     private boolean gameRunning = false;
 
-
     // Layout Views
     private TextView mTitle;
     private ListView mConversationView;
     private EditText mOutEditText;
     private Button mSendButton;
     private Button basicSButton;
-    private Button basicMButton;
     private Button cutthroatButton;
-
 
     //board and its solution
     private static List<Character> board;
     private ArrayList<String> boardSolution;
-    //private String[] tempArray;
 
-    //to run the board solver; HOWEVER, the BoardFragment.java runs the solver
-    //public static ArrayList<String> solverWordList;
-
+    // TODO - check if redundant - this may already be handled in the TwoPlayer activity!
     //managing words and points from the user
     public static ArrayList<String> player1WordList;
     public static int player1Pts = 0;
     private String player1Word;
     boolean player1Done;
 
+    // TODO - check if redundant - this may already be handled in the TwoPlayer activity!
     //receiving word and points from other player
     public static ArrayList<String> player2WordList;
     public static int player2Pts;
     private String player2Word;
     boolean player2Ready;
     boolean player2Done;
-
-
-
-
-
-
 
     // Name of the connected device
     private String mConnectedDeviceName = null;
@@ -171,6 +157,8 @@ public class BluetoothChat extends FragmentActivity {
             return;
         }
 
+        // TODO - check if redundant - this may already be handled in the TwoPlayer activity!
+        // TODO - also this may be handled differently per mode - basic/cutthroat.
         //Set up Two Player Game
         player1WordList = new ArrayList<String>();
         player2WordList = new ArrayList<String>();
@@ -180,7 +168,6 @@ public class BluetoothChat extends FragmentActivity {
         player1Done = false;
         player2Done = false;
     }
-
 
     @Override
     public void onStart() {
@@ -232,48 +219,31 @@ public class BluetoothChat extends FragmentActivity {
         // Initialize the buttons with a listener that for click events
         mSendButton = (Button) findViewById(R.id.button_send);
         basicSButton = (Button) findViewById(R.id.button_basicS);
-        basicMButton = (Button) findViewById(R.id.button_basicM);
         cutthroatButton = (Button) findViewById(R.id.button_cutthroat);
 
+        basicSButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) { startGame(); }
+        });
 
+        // TODO - cutthroat button
+        cutthroatButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                board = BoardFragment.getBoard();
+            }
+        });
 
-
-
-                basicSButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    startGame();
-
-
-                    }
-                });
-
-                basicMButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
-                        board = BoardFragment.getBoard();
-                    }
-                });
-
-                cutthroatButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
-                        board = BoardFragment.getBoard();
-                    }
-                });
-
-                mSendButton.setOnClickListener(new OnClickListener() {
-                    public void onClick(View v) {
-                        // Send a message using content of the edit text widget
-                        TextView view = (TextView) findViewById(R.id.edit_text_out);
-                        String message = view.getText().toString();
-                        //sendMessage(message);
-                        sendMessageNEW(CHAT, message);
-                    }
-                });
+        mSendButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                // Send a message using content of the edit text widget
+                TextView view = (TextView) findViewById(R.id.edit_text_out);
+                String message = view.getText().toString();
+                //sendMessage(message);
+                sendMessageNEW(CHAT, message);
+            }
+        });
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
@@ -312,6 +282,7 @@ public class BluetoothChat extends FragmentActivity {
         }
     }
 
+    // TODO - not in use?
     /**
      * Sends a message.
      * @param message  A string of text to send.
@@ -363,9 +334,10 @@ public class BluetoothChat extends FragmentActivity {
                         String message = view.getText().toString();
                         //sendMessage(message);
                         sendMessageNEW(CHAT, message);
-
                     }
+
                     if(D) Log.i(TAG, "END onEditorAction");
+
                     return true;
                 }
             };
@@ -377,6 +349,7 @@ public class BluetoothChat extends FragmentActivity {
             switch (msg.what) {
                 case MESSAGE_STATE_CHANGE:
                     if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
+
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
                             mTitle.setText(R.string.title_connected_to);
@@ -412,8 +385,6 @@ public class BluetoothChat extends FragmentActivity {
 
                     //test the message code to see what type of message was sent
                     if(messageCode == GAME_MODE){
-
-
                         //if the message is a boggle board parse all the letters and add them to your board
                     }else if(messageCode == BOGGLE_BOARD){
 
@@ -426,16 +397,12 @@ public class BluetoothChat extends FragmentActivity {
                             //unique.add(c);
                         }
 
-
                         Container.getInstance().setBoard(board);
 
                         startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
 
-
                         //if the message is a word list parse all the words and add them to your searched word list
                     }else if(messageCode == WORD_LIST){
-
-
                         System.out.println("##### in WORD_LIST section #####");
 
                         //Container.getInstance().getSolution().clear();
@@ -447,7 +414,6 @@ public class BluetoothChat extends FragmentActivity {
 //                        Container.getInstance().setSolution(boardSolution);
 //                        System.out.println(Container.getInstance().getSolution());
                         startGame();
-
                         //if the massage is a player 2 word add it to your player 2 word list
                     }else if(messageCode == PLAYER_TWO_WORD){
 //                        player2Word = message;
@@ -458,33 +424,25 @@ public class BluetoothChat extends FragmentActivity {
 //                            player2Pts+=pts;
 //                            addWord(player2Word, pts, R.id.TableLayout02,true);
 //                        }
-
                         //a message sent from the slave to the master to start the game
                     }else if(messageCode == START_GAME){
 //                        startGame();
-
                         //a message sent from player two to let the user know they are ready for a new game
                     }else if(messageCode == NEW_GAME){
 //                        player2Ready = true;
 //                        Toast.makeText(getApplicationContext(),"Player2 Ready",Toast.LENGTH_SHORT).show();
 //                        Toast.makeText(getApplicationContext(),"Press NewGame to play",Toast.LENGTH_SHORT).show();
-
                         //a message sent from player two to let the user know they finished playing
                     }else if(messageCode == END_GAME){
 //                        player2Done = true;
 //                        Toast.makeText(getApplicationContext(),"Player2 done",Toast.LENGTH_SHORT).show();
 //                        if(player1Done){
 //                            endGame();
-
                     //players chat
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                         break;
                     }
-
-
-
-
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
@@ -551,9 +509,6 @@ public class BluetoothChat extends FragmentActivity {
         return false;
     }
 
-
-
-
     /*
      * Start the Boggle game
      */
@@ -569,7 +524,6 @@ public class BluetoothChat extends FragmentActivity {
         player1Pts = 0;
         player2Pts = 0;
 
-
         //Set the board and send Boggle Board message if it is Master
         if(isMaster){
             Toast.makeText(this,"Is Master", Toast.LENGTH_SHORT).show();
@@ -577,49 +531,39 @@ public class BluetoothChat extends FragmentActivity {
             // set its own board first
             startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
 
-            try {
-                Thread.sleep(5000);                 //1000 milliseconds is one second.
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-
             board = Container.getInstance().getBoard();
 
             //System.out.println("###### BOARD " + board);
 
             //boardSolution = Container.getInstance().getSolution();
 
-
-
             //String message = "";
             //send word list to player 2
             //message = board.toString();
-//            for(int i = 0; i < searchedWordList.size(); i++){
-//                message = message + searchedWordList.get(i) + " ";
-//            }
-           // sendMessageNEW(CHAT, board.toString());
+//          for(int i = 0; i < searchedWordList.size(); i++){
+//              message = message + searchedWordList.get(i) + " ";
+//          }
+            // sendMessageNEW(CHAT, board.toString());
             sendMessageNEW(BOGGLE_BOARD, board.toString());
             //sendMessageNEW(WORD_LIST, boardSolution.toString());
         }
 
         //resets the submit button
-//            editText = (TextView)findViewById(R.id.SubmitScoreBtn);
-//            editText.setText("Submit");
-            player1Done = false;
-            player2Done = false;
+//      editText = (TextView)findViewById(R.id.SubmitScoreBtn);
+//      editText.setText("Submit");
+        player1Done = false;
+        player2Done = false;
 //
-//            //display the boggle board
-//            resetMatrix();
+//      //display the boggle board
+//      resetMatrix();
 
-//            //set the grid path to blank
-//            resetPath();
+//      //set the grid path to blank
+//      resetPath();
 
-//            //start timer
-//            setTimer();
+//      //start timer
+//      setTimer();
 
-            //keep screen on
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
-
-
 }

@@ -72,7 +72,7 @@ public class OnePlayer extends FragmentActivity {
         });
 
         final String parentPath = this.getFilesDir().getAbsolutePath();
-        new CountDownTimer(18000, 1000) {
+        new CountDownTimer(180000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
             public void onTick(long millisUntilFinished) {
