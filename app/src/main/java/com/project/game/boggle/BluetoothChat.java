@@ -316,24 +316,24 @@ public class BluetoothChat extends FragmentActivity {
      * Sends a message.
      * @param message  A string of text to send.
      */
-    private void sendMessage(String message) {
-        // Check that we're actually connected before trying anything
-        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            mChatService.write(send);
-
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
-        }
-    }
+//    private void sendMessage(String message) {
+//        // Check that we're actually connected before trying anything
+//        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+//            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Check that there's actually something to send
+//        if (message.length() > 0) {
+//            // Get the message bytes and tell the BluetoothChatService to write
+//            byte[] send = message.getBytes();
+//            mChatService.write(send);
+//
+//            // Reset out string buffer to zero and clear the edit text field
+//            mOutStringBuffer.setLength(0);
+//            mOutEditText.setText(mOutStringBuffer);
+//        }
+//    }
 
     /*
      * Sends a message as a string of text to send to player 2
@@ -568,20 +568,24 @@ public class BluetoothChat extends FragmentActivity {
        // wordSubmit.setText(player1Word);
         player1Pts = 0;
         player2Pts = 0;
+        player2Ready = false;
 
 
         //Set the board and send Boggle Board message if it is Master
         if(isMaster){
             Toast.makeText(this,"Is Master", Toast.LENGTH_SHORT).show();
 
+            board = BoardGenerator.getRandomDice();
+            Container.getInstance().setBoard(board);
+
             // set its own board first
             startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
 
-            try {
-                Thread.sleep(5000);                 //1000 milliseconds is one second.
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
+//            try {
+//                Thread.sleep(5000);                 //1000 milliseconds is one second.
+//            } catch(InterruptedException ex) {
+//                Thread.currentThread().interrupt();
+//            }
 
             board = Container.getInstance().getBoard();
 
@@ -599,7 +603,7 @@ public class BluetoothChat extends FragmentActivity {
 //            }
            // sendMessageNEW(CHAT, board.toString());
             sendMessageNEW(BOGGLE_BOARD, board.toString());
-            //sendMessageNEW(WORD_LIST, boardSolution.toString());
+            sendMessageNEW(WORD_LIST, boardSolution.toString());
         }
 
         //resets the submit button

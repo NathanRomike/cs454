@@ -23,7 +23,9 @@ public class Container {
     private ArrayList<String> solution; //board solution
 
 
-    private static List<Character> board = new ArrayList<Character>(); //board with 16 letters
+    private static List<Character> board;
+
+    //= new ArrayList<Character>(); //board with 16 letters
 
     private ArrayList<HashMap<String, Integer>> highscores; // List of highscores
     // need dictionary data type to hold highscores and the player name
