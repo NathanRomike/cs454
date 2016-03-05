@@ -67,12 +67,13 @@ public class BoardFragment extends Fragment {
 
 
 
-        BoggleSolver.setBoard(dieList);
-        BoggleSolver.boggleWordListSearch(dictionary);
+            BoggleSolver.setBoard(dieList);
+            BoggleSolver.boggleWordListSearch(dictionary);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         WordSelection.initQueue();
 
@@ -120,4 +121,8 @@ public class BoardFragment extends Fragment {
 
         return view;
     }
+
+
+
+
 }
