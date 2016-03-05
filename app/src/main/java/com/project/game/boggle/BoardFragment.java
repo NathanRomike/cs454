@@ -73,17 +73,21 @@ public class BoardFragment extends Fragment {
 
         //dieList=Container.getInstance().getBoard();
 
-        try {
-            dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
+        if (Container.getInstance().getSolution().size() == 0)
+        {
+            try {
+                dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
 
 
 
-            //BoggleSolver.setBoard(dieList);
-            BoggleSolver.setBoard(Container.getInstance().getBoard());
-            BoggleSolver.boggleWordListSearch(dictionary);
+                //BoggleSolver.setBoard(dieList);
+                BoggleSolver.setBoard(Container.getInstance().getBoard());
+                BoggleSolver.boggleWordListSearch(dictionary);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
 

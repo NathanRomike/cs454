@@ -441,11 +441,11 @@ public class BluetoothChat extends FragmentActivity {
                         //Container.getInstance().getSolution().clear();
 
 
-//                        boardSolution.clear();
-//
-//                        Collections.addAll(boardSolution, (message.split(",")));
-//                        Container.getInstance().setSolution(boardSolution);
-//                        System.out.println(Container.getInstance().getSolution());
+                        boardSolution.clear();
+
+                        Collections.addAll(boardSolution, (message.split(",")));
+                        Container.getInstance().setSolution(boardSolution);
+
                         startGame();
 
                         //if the massage is a player 2 word add it to your player 2 word list
@@ -578,6 +578,20 @@ public class BluetoothChat extends FragmentActivity {
             board = BoardGenerator.getRandomDice();
             Container.getInstance().setBoard(board);
 
+
+
+            try {
+                dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
+
+                BoggleSolver.setBoard(board);
+                BoggleSolver.boggleWordListSearch(dictionary);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
             // set its own board first
             startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
 
@@ -587,7 +601,7 @@ public class BluetoothChat extends FragmentActivity {
 //                Thread.currentThread().interrupt();
 //            }
 
-            board = Container.getInstance().getBoard();
+//            board = Container.getInstance().getBoard();
 
             //System.out.println("###### BOARD " + board);
 
