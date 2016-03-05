@@ -2,26 +2,355 @@ package com.project.game.boggle;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.nsd.NsdServiceInfo;
+import android.content.res.AssetManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.CountDownTimer;
+
+import android.support.v4.app.FragmentActivity;
+
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import android.util.Log;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 
+public class TwoPlayer extends FragmentActivity {
+    private static Dictionary dictionary;
 
 
-public class TwoPlayer extends AppCompatActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        getWindow().setLayout(width, height);
+
+        // display player name on middle of top screen
+        displayPlayerName();
+
+        final String parentPath = this.getFilesDir().getAbsolutePath();
+        new CountDownTimer(18000, 1000) {
+            TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
+
+            public void onTick(long millisUntilFinished) {
+                timerTextField.setText("Timer: " + (millisUntilFinished / 60000) + ":" + ((millisUntilFinished / 1000) % 60));
+            }
+
+            // when time is up, set the time display "Time's up!"
+            // set hightscore into container highscorcDic
+            // if it is one of top ten highscore, update highscore ArrayList
+            public void onFinish() {
+                timerTextField.setText("TIME'S UP!");
+                Container container = Container.getInstance();
+                container.setHighscoresDic(container.getUser(), container.getPlayerScore());
+                String fileName = Container.getHIGHSCORES();
+
+                // read rank from file and store into highscores
+                String filePath = parentPath+"/"+fileName;
+                File file = new File(filePath);
+
+                if(file.exists()){
+                    try {
+                        container.setHighscores(readHighscoreFromFile());
+                        container.updateHighscores(container.getHighscoresDic());
+                        // delete the content in file
+
+                        emptyFileContent(filePath);
+                        // rewrite rank into file
+//                        container.setHighscores(readHighscoreFromFile());
+
+                        writeToFile();
+                        container.setHighscores(readHighscoreFromFile());
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        container.updateHighscores(container.getHighscoresDic());
+                        writeToFile();
+                        readHighscoreFromFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // go to highscore activity from this OnePlayer activity
+                goToHighScores();
+            }
+        }.start();
     }
 
-    public void registerService(int port) {
-        // Create the NsdServiceInfo object, and populate it.
-        NsdServiceInfo serviceInfo = new NsdServiceInfo();
+    public void onShowWords(View view) {
+        Intent intent = new Intent(this, Words.class);
+        startActivity(intent);
+    }
+
+
+    public void onSubmit(View view) {
+        Container container = Container.getInstance();
+        String word = container.getWord();
+        word = word.toLowerCase();
+        int wordSize=word.length();
+
+
+
+        submitWord(word);
+
+
+        int score = container.getPlayerScore();
+        score += computeScore(wordSize);
+
+        container.setPlayerScore(score);
+        WordSelection.unhighlightAll();
+
+        // update the score displayed on top left of screen every time hit submit button
+        updateScoreOnTop();
+    }
+
+
+    public static void submitWord(String word)
+    {
+        Container container = Container.getInstance();
+        int wordSize;
+
+        try {
+            wordSize = word.length();
+
+            if (wordSize < 3) {
+                WordSelection.unhighlightAll();
+                container.setWord(null);
+                return;
+            }
+        } catch (Exception e) {
+            return;
+        }
+
+
+        ArrayList<String> wordList = container.getWordList();
+
+        if (!wordList.isEmpty()) {
+            Iterator words = wordList.iterator();
+
+            while (words.hasNext()) {
+                if (word.equals(words.next())) {
+                    WordSelection.unhighlightAll();
+                    container.setWord(null);
+                    return;
+                }
+            }
+        }
+
+
+        if (Container.getInstance().getDictionary().containsKey(word)) {
+            wordList.add(word);
+            container.setWordList(wordList);
+            container.setWord(null);
+        } else {
+            WordSelection.unhighlightAll();
+            container.setWord(null);
+            return;
+        }
+
     }
 
 
 
+    public static int computeScore(int wordSize){
+
+        Container container = Container.getInstance();
+        int score =container.getPlayerScore();
+
+        switch (wordSize) {
+            case 0:
+                score +=0;
+                break;
+            case 1:
+                score +=0;
+                break;
+            case 2:
+                score += 0;
+                break;
+            case 3:
+                score += 1;
+                break;
+            case 4:
+                score += 1;
+                break;
+            case 5:
+                score += 2;
+                break;
+            case 6:
+                score += 3;
+                break;
+            case 7:
+                score += 5;
+                break;
+            case 8:
+                score += 11;
+                break;
+            default:
+                score += 11;
+        }
+
+        container.setPlayerScore(score);
+        return score;
+    }
+
+
+    public void displayPlayerName() {
+        Container container = Container.getInstance();
+        TextView playerNameTextField = (TextView) findViewById(R.id.user_name);
+        playerNameTextField.setText(container.getUser());
+    }
+
+    public void updateScoreOnTop() {
+        Container container = Container.getInstance();
+        TextView scoreTextField = (TextView) findViewById(R.id.user_score);
+        int scoreAsInt = container.getPlayerScore();
+        String scoreAsString = "Score: " + Integer.toString(scoreAsInt);
+        scoreTextField.setText(scoreAsString);
+    }
+
+
+    public void onSolve(View view) {
+        Intent intent = new Intent(this, Solution.class);
+        startActivity(intent);
+    }
+
+
+    public void goToHighScores() {
+        Intent intent = new Intent(this, Highscores.class);
+//        Container container = Container.getInstance();
+//        // pass player name from this activity to onePlayer activity
+//        intent.putExtra("playerScore", container.getPlayerScore());
+//        intent.putExtra("playerName", container.getUser());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    public void writeToFile() throws IOException {
+        Container container = Container.getInstance();
+        String fileName = Container.getHIGHSCORES();
+
+//        FileOutputStream writer = openFileOutput(fileName, Context.MODE_PRIVATE);
+        OutputStream outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+        BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+        int size = container.getHighscores().size();
+        for (int i = 0; i < size; i++) {
+            Iterator index = container.getHighscores().get(i).keySet().iterator();
+            String tempPlayerName = (String) index.next();
+            String score = container.getHighscores().get(i).get(tempPlayerName).toString();
+
+//            for(int j = 0; j < 5; j++) {
+            writer.write(tempPlayerName);
+            writer.write(",");
+            writer.write(score);
+            writer.newLine();
+//            }
+        }
+        writer.close();
+
+    }
+
+    public void emptyFileContent(String toDeletePath) throws IOException {
+        Container container = Container.getInstance();
+        String fileName = Container.getHIGHSCORES();
+        File file =  new File(toDeletePath);
+        Boolean fileBoolean = file.delete();
+//        FileOutputStream writer = openFileOutput(fileName, Context.MODE_PRIVATE);
+
+//        PrintWriter pw = new PrintWriter(fileName);
+//        pw.write("");
+//        pw.close();
+
+    }
+
+
+//    public String readHighscoreFromFile() throws IOException {
+
+    public ArrayList<HashMap<String, Integer>> readHighscoreFromFile() throws IOException {
+        Container container = Container.getInstance();
+        String fileName = Container.getHIGHSCORES();
+//        FileInputStream reader = openFileInput(fileName);
+        ArrayList<HashMap<String, Integer>> rank =  new ArrayList<HashMap<String, Integer>>();
+        String temp = "";
+        try {
+            InputStream inputStream = openFileInput(fileName);
+            // this is how to get file path
+//            String path = this.getFilesDir().getAbsolutePath();
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    HashMap<String, Integer> tempPlayerAndScore = new HashMap<String, Integer>();
+                    String[] splitString = receiveString.split("\\,");
+//                    stringBuilder.append(receiveString);
+                    tempPlayerAndScore.put(splitString[0], Integer.parseInt(splitString[1]));
+                    rank.add(tempPlayerAndScore);
+                }
+
+                inputStream.close();
+                temp = stringBuilder.toString();
+            }
+            else{
+                return null;
+            }
+
+        } catch (FileNotFoundException e) {
+            Log.e("OnePlayer activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("OnePlayer activity", "Can not read file: " + e.toString());
+
+//        container.setHighscoresDic(container.getUser(), container.getPlayerScore());
+//        container.updateHighscores(container.getHighscoresDic());
+
+        }
+        return rank;
+    }
 }
