@@ -72,14 +72,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
-        <activity android:name=".Help"
-            android:label="@string/activity_help"
-            android:parentActivityName=".MainMenu"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainMenu" />
-        </activity>
+
+
         <activity android:name=".BluetoothChat"
                   android:label="@string/title_activity_bluetoothChat"
                   android:theme="@style/CustomTheme">
@@ -92,6 +86,7 @@
                   android:theme="@style/CustomTheme">
                   <!--android:parentActivityName=".MainMenu"-->
         </activity>
+
     </application>
 
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />

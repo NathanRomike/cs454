@@ -60,9 +60,4 @@ public class MainMenu extends AppCompatActivity {
         Intent intent = new Intent(this, Highscores.class);
         startActivity(intent);
     }
-
-    public void helpScreen(View view) {
-        Intent intent = new Intent(this, Help.class);
-        startActivity(intent);
-    }
 }
