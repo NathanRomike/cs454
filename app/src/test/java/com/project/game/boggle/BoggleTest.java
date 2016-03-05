@@ -8,7 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -50,30 +55,60 @@ public class BoggleTest {
 
     @Test
     public void testWordLen012() throws Exception {
-        // we need to test onSubmit method here
+        System.out.println("TEST: the score of a correct word of 1 or 2 letters");
+
+        int i = 0;
+        Container.getInstance().setPlayerScore(0);
+        Container.getInstance().setWord("I");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("hi");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+
+        assertEquals("The score for a correct word with length 1 or 2 should be 0!"
+                , 0, Container.getInstance().getPlayerScore());
+
 
     }
 
 
-    ////////////////////////////////////////////////
-    ////////////////////////////////////////////////
-    // here we need to test that the score increase
-    // as the user submit a correct word rathar than
-    // starting with score 0 ==> change the 7 test
-    // cases you created to affect this kind of calc.
-    ////////////////////////////////////////////////
-    ////////////////////////////////////////////////
+    @Test
+    public void testScore() throws Exception {
+        System.out.println("TEST: the score increases as the user submit a new word");
+         int i = 0;
+        Container.getInstance().setPlayerScore(0);
+        Container.getInstance().setWord("I");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("hi");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("see");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("tree");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("north");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("banana");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("messman");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
+        Container.getInstance().setWord("abashing");
+        i+=OnePlayer.computeScore(Container.getInstance().getWord().length());
 
-    /*
+        assertEquals("The total score should be 23!"
+                , 23, Container.getInstance().getPlayerScore());
+
+    }
+
+
 
     @Test
     public void testWordLen3() throws Exception {
         System.out.println("TEST: the score of a correct word of 3 letters");
 
         Container.getInstance().setWord("see");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 3 should be 1!"
-                , 1, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 1, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
 
@@ -82,9 +117,10 @@ public class BoggleTest {
         System.out.println("TEST: the score of a correct word of 4 letters");
 
         Container.getInstance().setWord("tree");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 4 should be 1!"
-                , 1, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 1, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
 
@@ -93,9 +129,10 @@ public class BoggleTest {
         System.out.println("TEST: the score of a correct word of 5 letters");
 
         Container.getInstance().setWord("north");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 5 should be 2!"
-                , 2, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 2, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
 
@@ -104,9 +141,10 @@ public class BoggleTest {
         System.out.println("TEST: the score of a correct word of 6 letters");
 
         Container.getInstance().setWord("banana");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 5 should be 3!"
-                , 3, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 3, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
 
@@ -115,9 +153,10 @@ public class BoggleTest {
         System.out.println("TEST: the score of a correct word of 7 letters");
 
         Container.getInstance().setWord("messman");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 5 should be 1!"
-                , 5, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 5, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
 
@@ -126,9 +165,10 @@ public class BoggleTest {
         System.out.println("TEST: the score of a correct word of 8 letters");
 
         Container.getInstance().setWord("abashing");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 5 should be 11!"
-                , 11, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 11, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
 
@@ -137,27 +177,17 @@ public class BoggleTest {
         System.out.println("TEST: the score of a correct word of 9 letters or more");
 
         Container.getInstance().setWord("abarticular");
-        System.out.println();
+        Container.getInstance().setPlayerScore(0);
+
         assertEquals("The score for a correct word with length 5 should be 11 !"
-                , 11, OnePlayer.score(Container.getInstance().getWord().length()));
+                , 11, OnePlayer.computeScore(Container.getInstance().getWord().length()));
 
     }
-
 
     @Test
     public void testGeneratedGridSize() throws Exception {
         System.out.println("testing boggle board size");
         assertEquals("The size of the generated grid != 16", 16, BoardGenerator.getRandomDice().size());
-
-    }
-
-    @Test
-    public void testGeneratedGridContent() throws Exception {
-        System.out.println("testing boggle board content");
-
-        //here we need to test that the content of the board is letters not null or #
-        // + we need to make sure that non of the 16 letters is empty!
-        //assertEquals("The size of the generated grid != 16", 16, BoardGenerator.getRandomDice().size());
 
     }
 
@@ -188,6 +218,59 @@ public class BoggleTest {
 
     }
 
+    @Test
+    public void testSubmittignWord() throws Exception {
+        System.out.println("TEST: submitting word");
+
+        InputStream  r= this.getClass().getClassLoader().getResourceAsStream("english-dictionary.txt");
+        Dictionary dict = new Dictionary(r);
+
+        HashMap dictionary = new HashMap();
+        ArrayList<String> wordList = new ArrayList<>();
+
+        try {
+            BufferedReader bf = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(("english-dictionary.txt"))));
+            String word;
+
+            while ((word = bf.readLine()) != null) {
+                dictionary.put(word, word);
+            }
+
+            Container.getInstance().setDictionary(dictionary);
+            Container.getInstance().setWordList(wordList);
+
+            OnePlayer.submitWord("I");
+            OnePlayer.submitWord("three");
+            OnePlayer.submitWord("tree");
+            OnePlayer.submitWord("tree");
+            System.out.println(wordList.toString());
+        }
+    catch (Exception e) {
+        System.out.println("");
+        System.out.println(e);
+
+    }
+
+        assertTrue("The user can not submit the same word more than one time, the expected array size is 2",
+                wordList.size()==2);
+
+
+    }
+
+
+
+
+
+
+
+
+    @Test
+    public void testHighSore() throws Exception {
+        System.out.println("testing high-score list");
+        //in this part we need to verify that any new score will affects the hig-score list
+        //assertEquals("The size of the generated grid != 16", 16, BoardGenerator.getRandomDice().size());
+
+    }
 
     @Test
     public void testValidMove() throws Exception {
@@ -198,23 +281,16 @@ public class BoggleTest {
     }
 
     @Test
-    public void testSubmittignWord() throws Exception {
-        System.out.println("TEST: submitting word");
-        //in this test we need to make sure that the submitted word is added to the list
-        // we also need to make sure that duplicate words are not counted
+    public void testGeneratedGridContent() throws Exception {
+        System.out.println("testing boggle board content");
+
+        //here we need to test that the content of the board is letters not null or #
+        // + we need to make sure that non of the 16 letters is empty!
         //assertEquals("The size of the generated grid != 16", 16, BoardGenerator.getRandomDice().size());
 
     }
 
-    @Test
-    public void testHighSore() throws Exception {
-        System.out.println("testing high-score list");
-        //in this part we need to verify that any new score will affects the hig-score list
-        //assertEquals("The size of the generated grid != 16", 16, BoardGenerator.getRandomDice().size());
 
-    }
-
-*/
 
 
 }

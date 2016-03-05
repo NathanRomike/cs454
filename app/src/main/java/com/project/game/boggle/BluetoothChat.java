@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,14 +36,27 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import android.view.WindowManager;
 
 /**
  * This is the bluetooth_main Activity that displays the current chat session.
  */
-public class BluetoothChat extends Activity {
+public class BluetoothChat extends FragmentActivity {
+    private static Dictionary dictionary;
     // Debugging
     private static final String TAG = "BluetoothChat";
     private static final boolean D = true;
@@ -54,6 +68,18 @@ public class BluetoothChat extends Activity {
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
 
+
+    //Message Codes embedded as the first char in every message
+    public static final int GAME_MODE = 0;
+    public static final int BOGGLE_BOARD = 1;
+    public static final int WORD_LIST = 2;
+    public static final int PLAYER_TWO_WORD = 3;
+    public static final int START_GAME = 4;
+    public static final int NEW_GAME = 5;
+    public static final int END_GAME = 6;
+    public static final int CHAT = 7;
+
+
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -62,11 +88,51 @@ public class BluetoothChat extends Activity {
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
+
+    //Boolean to determine if game mode is Basic or cutThroat
+    private boolean isCutThroat = false;
+    //Boolean to determine if device is Master or Slave
+    private boolean isMaster = false;
+    //Boolean to determine if the game is running
+    private boolean gameRunning = false;
+
+
     // Layout Views
     private TextView mTitle;
     private ListView mConversationView;
     private EditText mOutEditText;
     private Button mSendButton;
+    private Button basicSButton;
+    private Button basicMButton;
+    private Button cutthroatButton;
+
+
+    //board and its solution
+    private static List<Character> board;
+    private ArrayList<String> boardSolution;
+    //private String[] tempArray;
+
+    //to run the board solver; HOWEVER, the BoardFragment.java runs the solver
+    //public static ArrayList<String> solverWordList;
+
+    //managing words and points from the user
+    public static ArrayList<String> player1WordList;
+    public static int player1Pts = 0;
+    private String player1Word;
+    boolean player1Done;
+
+    //receiving word and points from other player
+    public static ArrayList<String> player2WordList;
+    public static int player2Pts;
+    private String player2Word;
+    boolean player2Ready;
+    boolean player2Done;
+
+
+
+
+
+
 
     // Name of the connected device
     private String mConnectedDeviceName = null;
@@ -104,7 +170,17 @@ public class BluetoothChat extends Activity {
             finish();
             return;
         }
+
+        //Set up Two Player Game
+        player1WordList = new ArrayList<String>();
+        player2WordList = new ArrayList<String>();
+        player1Pts = 0;
+        player2Pts = 0;
+        player2Ready = false;
+        player1Done = false;
+        player2Done = false;
     }
+
 
     @Override
     public void onStart() {
@@ -116,7 +192,7 @@ public class BluetoothChat extends Activity {
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        // Otherwise, setup the chat session
+            // Otherwise, setup the chat session
         } else {
             if (mChatService == null) setupChat();
         }
@@ -133,14 +209,16 @@ public class BluetoothChat extends Activity {
         if (mChatService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
-              // Start the Bluetooth chat services
-              mChatService.start();
+                // Start the Bluetooth chat services
+                mChatService.start();
             }
         }
     }
 
     private void setupChat() {
         Log.d(TAG, "setupChat()");
+
+        mChatService = new BluetoothChatService(this, mHandler);
 
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message);
@@ -151,16 +229,51 @@ public class BluetoothChat extends Activity {
         mOutEditText = (EditText) findViewById(R.id.edit_text_out);
         mOutEditText.setOnEditorActionListener(mWriteListener);
 
-        // Initialize the send button with a listener that for click events
+        // Initialize the buttons with a listener that for click events
         mSendButton = (Button) findViewById(R.id.button_send);
-        mSendButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                // Send a message using content of the edit text widget
-                TextView view = (TextView) findViewById(R.id.edit_text_out);
-                String message = view.getText().toString();
-                sendMessage(message);
-            }
-        });
+        basicSButton = (Button) findViewById(R.id.button_basicS);
+        basicMButton = (Button) findViewById(R.id.button_basicM);
+        cutthroatButton = (Button) findViewById(R.id.button_cutthroat);
+
+
+
+
+
+                basicSButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    startGame();
+
+
+                    }
+                });
+
+                basicMButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                        board = BoardFragment.getBoard();
+                    }
+                });
+
+                cutthroatButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                        board = BoardFragment.getBoard();
+                    }
+                });
+
+                mSendButton.setOnClickListener(new OnClickListener() {
+                    public void onClick(View v) {
+                        // Send a message using content of the edit text widget
+                        TextView view = (TextView) findViewById(R.id.edit_text_out);
+                        String message = view.getText().toString();
+                        //sendMessage(message);
+                        sendMessageNEW(CHAT, message);
+                    }
+                });
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
@@ -192,7 +305,7 @@ public class BluetoothChat extends Activity {
     private void ensureDiscoverable() {
         if(D) Log.d(TAG, "ensure discoverable");
         if (mBluetoothAdapter.getScanMode() !=
-            BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
             startActivity(discoverableIntent);
@@ -203,83 +316,185 @@ public class BluetoothChat extends Activity {
      * Sends a message.
      * @param message  A string of text to send.
      */
-    private void sendMessage(String message) {
+//    private void sendMessage(String message) {
+//        // Check that we're actually connected before trying anything
+//        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+//            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Check that there's actually something to send
+//        if (message.length() > 0) {
+//            // Get the message bytes and tell the BluetoothChatService to write
+//            byte[] send = message.getBytes();
+//            mChatService.write(send);
+//
+//            // Reset out string buffer to zero and clear the edit text field
+//            mOutStringBuffer.setLength(0);
+//            mOutEditText.setText(mOutStringBuffer);
+//        }
+//    }
+
+    /*
+     * Sends a message as a string of text to send to player 2
+     */
+    private void sendMessageNEW(int messageCode, String message) {
+
         // Check that we're actually connected before trying anything
         if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            mChatService.write(send);
-
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
-        }
+        // Get the message bytes and tell the BluetoothChatService to write
+        String fullMessage = messageCode + message;
+        //Toast.makeText(this, "Full Message: " + fullMessage, Toast.LENGTH_SHORT).show();
+        byte[] send = fullMessage.getBytes();
+        mChatService.write(send);
+        mOutEditText.setText(Container.getInstance().getBoard().toString());
     }
 
     // The action listener for the EditText widget, to listen for the return key
     private TextView.OnEditorActionListener mWriteListener =
-        new TextView.OnEditorActionListener() {
-        public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-            // If the action is a key-up event on the return key, send the message
-            if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) {
-                String message = view.getText().toString();
-                sendMessage(message);
-            }
-            if(D) Log.i(TAG, "END onEditorAction");
-            return true;
-        }
-    };
+            new TextView.OnEditorActionListener() {
+                public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                    // If the action is a key-up event on the return key, send the message
+                    if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) {
+                        String message = view.getText().toString();
+                        //sendMessage(message);
+                        sendMessageNEW(CHAT, message);
+
+                    }
+                    if(D) Log.i(TAG, "END onEditorAction");
+                    return true;
+                }
+            };
 
     // The Handler that gets information back from the BluetoothChatService
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MESSAGE_STATE_CHANGE:
-                if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
-                switch (msg.arg1) {
-                case BluetoothChatService.STATE_CONNECTED:
-                    mTitle.setText(R.string.title_connected_to);
-                    mTitle.append(mConnectedDeviceName);
-                    mConversationArrayAdapter.clear();
+                case MESSAGE_STATE_CHANGE:
+                    if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
+                    switch (msg.arg1) {
+                        case BluetoothChatService.STATE_CONNECTED:
+                            mTitle.setText(R.string.title_connected_to);
+                            mTitle.append(mConnectedDeviceName);
+                            mConversationArrayAdapter.clear();
+                            break;
+                        case BluetoothChatService.STATE_CONNECTING:
+                            mTitle.setText(R.string.title_connecting);
+                            isMaster=true;
+                            break;
+                        case BluetoothChatService.STATE_LISTEN:
+                        case BluetoothChatService.STATE_NONE:
+                            mTitle.setText(R.string.title_not_connected);
+                            break;
+                    }
                     break;
-                case BluetoothChatService.STATE_CONNECTING:
-                    mTitle.setText(R.string.title_connecting);
+                case MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
-                case BluetoothChatService.STATE_LISTEN:
-                case BluetoothChatService.STATE_NONE:
-                    mTitle.setText(R.string.title_not_connected);
+                case MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+
+                    //get the messageCode integer at the beginning of every message
+                    String strNum = readMessage.substring(0, 1);
+                    int messageCode = Integer.parseInt(strNum);
+                    //get the rest of the message
+                    String message = readMessage.substring(1);
+
+                    //test the message code to see what type of message was sent
+                    if(messageCode == GAME_MODE){
+
+
+                        //if the message is a boggle board parse all the letters and add them to your board
+                    }else if(messageCode == BOGGLE_BOARD){
+
+                        String board_str = message.replaceAll("[^a-zA-Z]", "");
+
+                        board = new ArrayList<Character>();
+                        //Set<Character> unique = new HashSet<Character>();
+                        for(char c : board_str.toCharArray()) {
+                            board.add(c);
+                            //unique.add(c);
+                        }
+
+
+                        Container.getInstance().setBoard(board);
+
+                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+
+
+                        //if the message is a word list parse all the words and add them to your searched word list
+                    }else if(messageCode == WORD_LIST){
+
+
+                        System.out.println("##### in WORD_LIST section #####");
+
+                        //Container.getInstance().getSolution().clear();
+
+
+//                        boardSolution.clear();
+//
+//                        Collections.addAll(boardSolution, (message.split(",")));
+//                        Container.getInstance().setSolution(boardSolution);
+//                        System.out.println(Container.getInstance().getSolution());
+                        startGame();
+
+                        //if the massage is a player 2 word add it to your player 2 word list
+                    }else if(messageCode == PLAYER_TWO_WORD){
+//                        player2Word = message;
+//                        player2WordList.add(player2Word);
+//                        //if the game is cut add the word to the player 2 scroll list display
+//                        if(isCutThroat){
+//                            pts = getScore(player2Word);
+//                            player2Pts+=pts;
+//                            addWord(player2Word, pts, R.id.TableLayout02,true);
+//                        }
+
+                        //a message sent from the slave to the master to start the game
+                    }else if(messageCode == START_GAME){
+//                        startGame();
+
+                        //a message sent from player two to let the user know they are ready for a new game
+                    }else if(messageCode == NEW_GAME){
+//                        player2Ready = true;
+//                        Toast.makeText(getApplicationContext(),"Player2 Ready",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(),"Press NewGame to play",Toast.LENGTH_SHORT).show();
+
+                        //a message sent from player two to let the user know they finished playing
+                    }else if(messageCode == END_GAME){
+//                        player2Done = true;
+//                        Toast.makeText(getApplicationContext(),"Player2 done",Toast.LENGTH_SHORT).show();
+//                        if(player1Done){
+//                            endGame();
+
+                    //players chat
+                    }else if(messageCode == CHAT){
+                        mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
+                        break;
+                    }
+
+
+
+
+                case MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                    Toast.makeText(getApplicationContext(), "Connected to "
+                            + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
-                }
-                break;
-            case MESSAGE_WRITE:
-                byte[] writeBuf = (byte[]) msg.obj;
-                // construct a string from the buffer
-                String writeMessage = new String(writeBuf);
-                mConversationArrayAdapter.add("Me:  " + writeMessage);
-                break;
-            case MESSAGE_READ:
-                byte[] readBuf = (byte[]) msg.obj;
-                // construct a string from the valid bytes in the buffer
-                String readMessage = new String(readBuf, 0, msg.arg1);
-                mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                break;
-            case MESSAGE_DEVICE_NAME:
-                // save the connected device's name
-                mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                Toast.makeText(getApplicationContext(), "Connected to "
-                               + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                break;
-            case MESSAGE_TOAST:
-                Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
-                               Toast.LENGTH_SHORT).show();
-                break;
+                case MESSAGE_TOAST:
+                    Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
+                            Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -287,29 +502,29 @@ public class BluetoothChat extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(D) Log.d(TAG, "onActivityResult " + resultCode);
         switch (requestCode) {
-        case REQUEST_CONNECT_DEVICE:
-            // When DeviceListActivity returns with a device to connect
-            if (resultCode == Activity.RESULT_OK) {
-                // Get the device MAC address
-                String address = data.getExtras()
-                                     .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                // Get the BLuetoothDevice object
-                BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-                // Attempt to connect to the device
-                mChatService.connect(device);
-            }
-            break;
-        case REQUEST_ENABLE_BT:
-            // When the request to enable Bluetooth returns
-            if (resultCode == Activity.RESULT_OK) {
-                // Bluetooth is now enabled, so set up a chat session
-                setupChat();
-            } else {
-                // User did not enable Bluetooth or an error occured
-                Log.d(TAG, "BT not enabled");
-                Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            case REQUEST_CONNECT_DEVICE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+                    // Get the device MAC address
+                    String address = data.getExtras()
+                            .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    // Get the BLuetoothDevice object
+                    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+                    // Attempt to connect to the device
+                    mChatService.connect(device);
+                }
+                break;
+            case REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    // Bluetooth is now enabled, so set up a chat session
+                    setupChat();
+                } else {
+                    // User did not enable Bluetooth or an error occured
+                    Log.d(TAG, "BT not enabled");
+                    Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
         }
     }
 
@@ -323,17 +538,92 @@ public class BluetoothChat extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.scan:
-            // Launch the DeviceListActivity to see devices and do scan
-            Intent serverIntent = new Intent(this, DeviceListActivity.class);
-            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-            return true;
-        case R.id.discoverable:
-            // Ensure this device is discoverable by others
-            ensureDiscoverable();
-            return true;
+            case R.id.scan:
+                // Launch the DeviceListActivity to see devices and do scan
+                Intent serverIntent = new Intent(this, DeviceListActivity.class);
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+                return true;
+            case R.id.discoverable:
+                // Ensure this device is discoverable by others
+                ensureDiscoverable();
+                return true;
         }
         return false;
     }
+
+
+
+
+    /*
+     * Start the Boggle game
+     */
+    private void startGame(){
+
+        gameRunning = true;
+
+        //clear these variables before starting
+        player1WordList.clear();
+        player2WordList.clear();
+        player1Word = "";
+       // wordSubmit.setText(player1Word);
+        player1Pts = 0;
+        player2Pts = 0;
+        player2Ready = false;
+
+
+        //Set the board and send Boggle Board message if it is Master
+        if(isMaster){
+            Toast.makeText(this,"Is Master", Toast.LENGTH_SHORT).show();
+
+            board = BoardGenerator.getRandomDice();
+            Container.getInstance().setBoard(board);
+
+            // set its own board first
+            startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+
+//            try {
+//                Thread.sleep(5000);                 //1000 milliseconds is one second.
+//            } catch(InterruptedException ex) {
+//                Thread.currentThread().interrupt();
+//            }
+
+            board = Container.getInstance().getBoard();
+
+            //System.out.println("###### BOARD " + board);
+
+            //boardSolution = Container.getInstance().getSolution();
+
+
+
+            //String message = "";
+            //send word list to player 2
+            //message = board.toString();
+//            for(int i = 0; i < searchedWordList.size(); i++){
+//                message = message + searchedWordList.get(i) + " ";
+//            }
+           // sendMessageNEW(CHAT, board.toString());
+            sendMessageNEW(BOGGLE_BOARD, board.toString());
+            sendMessageNEW(WORD_LIST, boardSolution.toString());
+        }
+
+        //resets the submit button
+//            editText = (TextView)findViewById(R.id.SubmitScoreBtn);
+//            editText.setText("Submit");
+            player1Done = false;
+            player2Done = false;
+//
+//            //display the boggle board
+//            resetMatrix();
+
+//            //set the grid path to blank
+//            resetPath();
+
+//            //start timer
+//            setTimer();
+
+            //keep screen on
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
 
 }

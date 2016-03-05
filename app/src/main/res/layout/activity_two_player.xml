@@ -1,34 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.project.game.boggle.TwoPlayer">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout android:id="@+id/status_bar"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="60dp"
+        android:background="@color/colorPrimary">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <TextView android:id="@+id/user_score"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/user_score"
+            android:textColor="@color/white" />
 
-    </android.support.design.widget.AppBarLayout>
+        <TextView android:id="@+id/user_name"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/user_name"
+            android:textColor="@color/white" />
 
-    <include layout="@layout/content_two_player" />
+        <TextView android:id="@+id/countdown_timer"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/countdown_timer"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="448dp">
 
-</android.support.design.widget.CoordinatorLayout>
+        <fragment
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:name="com.project.game.boggle.BoardFragment"
+            android:id="@+id/fragment"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            tools:layout="@layout/content_board" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:background="@color/colorPrimary">
+
+        <Button android:id="@+id/show_words"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/words_button"
+            android:onClick="onShowWords" />
+
+        <Button android:id="@+id/submit_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit_button"
+            android:onClick="onSubmit" />
+
+        <Button android:id="@+id/solve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/solve_button"
+            android:onClick="onSolve" />
+    </LinearLayout>
+</LinearLayout>
