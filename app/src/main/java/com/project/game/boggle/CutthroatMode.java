@@ -16,49 +16,48 @@
 
 package com.project.game.boggle;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+        import android.app.Activity;
+        import android.bluetooth.BluetoothAdapter;
+        import android.bluetooth.BluetoothDevice;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import android.os.Message;
+        import android.util.Log;
+        import android.view.KeyEvent;
+        import android.view.LayoutInflater;
+        import android.view.Menu;
+        import android.view.MenuInflater;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.Window;
+        import android.view.View.OnClickListener;
+        import android.view.inputmethod.EditorInfo;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.LinearLayout;
+        import android.widget.ListView;
+        import android.widget.TextView;
+        import android.widget.Toast;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentActivity;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import android.view.WindowManager;
+        import java.lang.reflect.Array;
+        import java.util.Arrays;
+        import java.util.Collections;
+        import java.util.List;
+        import java.util.ArrayList;
+        import java.util.Set;
+        import java.util.HashSet;
+        import android.view.WindowManager;
 
-/**
- * This is the bluetooth_main Activity that displays the current chat session.
- */
-public class BluetoothChat extends FragmentActivity {
+
+public class CutthroatMode extends FragmentActivity {
     private static Dictionary dictionary;
+
     // Debugging
-    private static final String TAG = "BluetoothChat";
+    private static final String TAG = "CutthroatMode";
     private static final boolean D = true;
 
     // Message types sent from the BluetoothChatService Handler
@@ -86,8 +85,6 @@ public class BluetoothChat extends FragmentActivity {
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
-    //Boolean to determine if game mode is Basic or cutThroat
-    private boolean isCutThroat = false;
     //Boolean to determine if device is Master or Slave
     private boolean isMaster = false;
     //Boolean to determine if the game is running
@@ -101,6 +98,7 @@ public class BluetoothChat extends FragmentActivity {
     private static List<Character> board;
     private ArrayList<String> boardSolution;
 
+/*
     // TODO - check if redundant - this may already be handled in the TwoPlayer activity!
     //managing words and points from the user
     public static ArrayList<String> player1WordList;
@@ -115,11 +113,12 @@ public class BluetoothChat extends FragmentActivity {
     private String player2Word;
     boolean player2Ready;
     boolean player2Done;
+*/
 
     // Name of the connected device
     private String mConnectedDeviceName = null;
     // Array adapter for the conversation thread
-    private ArrayAdapter<String> mConversationArrayAdapter;
+    private ArrayAdapter<String> mConversationArrayAdapter;  // TODO - REMOVE CONVERSATION THREAD
     // String buffer for outgoing messages
     private StringBuffer mOutStringBuffer;
     // Local Bluetooth adapter
@@ -153,8 +152,8 @@ public class BluetoothChat extends FragmentActivity {
             return;
         }
 
-        Container.getInstance().setBluetoothChat(this);
 
+/*
         // TODO - check if redundant - this may already be handled in the TwoPlayer activity!
         // TODO - also this may be handled differently per mode - basic/cutthroat.
         //Set up Two Player Game
@@ -165,6 +164,7 @@ public class BluetoothChat extends FragmentActivity {
         player2Ready = false;
         player1Done = false;
         player2Done = false;
+*/
     }
 
     @Override
@@ -202,9 +202,10 @@ public class BluetoothChat extends FragmentActivity {
 
     private void setupChat() {
         Log.d(TAG, "setupChat()");
-
+/*
         // TODO - WHY IS THIS HERE TWICE (SEE BELOW)
         mChatService = new BluetoothChatService(this, mHandler);
+*/
 
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message);
@@ -220,21 +221,21 @@ public class BluetoothChat extends FragmentActivity {
         Button basicSButton = (Button) findViewById(R.id.button_basicS);
         Button cutthroatButton = (Button) findViewById(R.id.button_cutthroat);
 
-        basicSButton.setOnClickListener(new OnClickListener() {
+        basicSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { startGame(); }
         });
 
         // TODO - cutthroat button
-        cutthroatButton.setOnClickListener(new OnClickListener() {
+        cutthroatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                startActivity(new Intent(CutthroatMode.this, TwoPlayer.class));
                 board = BoardFragment.getBoard();
             }
         });
 
-        mSendButton.setOnClickListener(new OnClickListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Send a message using content of the edit text widget
                 TextView view = (TextView) findViewById(R.id.edit_text_out);
@@ -346,6 +347,8 @@ public class BluetoothChat extends FragmentActivity {
                 }
             };
 
+
+// TODO - INSERT GAME LOGIC IN THE HANDLER
     // The Handler that gets information back from the BluetoothChatService
     private final Handler mHandler = new Handler() {
         @Override
@@ -403,7 +406,7 @@ public class BluetoothChat extends FragmentActivity {
 
                         Container.getInstance().setBoard(board);
 
-                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                        startActivity(new Intent(CutthroatMode.this, TwoPlayer.class));
 
                         //if the message is a word list parse all the words and add them to your searched word list
                     }else if(messageCode == WORD_LIST){
@@ -448,7 +451,7 @@ public class BluetoothChat extends FragmentActivity {
 //                        Toast.makeText(getApplicationContext(),"Player2 done",Toast.LENGTH_SHORT).show();
 //                        if(player1Done){
 //                            endGame();
-                    //players chat
+                        //players chat
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                         break;
@@ -526,44 +529,34 @@ public class BluetoothChat extends FragmentActivity {
 
         gameRunning = true;
 
+/*
+        // TODO - SET UP A RESET FUNCTION IN CONTAINTER, CALL THAT HERE
         //clear these variables before starting
         player1WordList.clear();
         player2WordList.clear();
         player1Word = "";
-       // wordSubmit.setText(player1Word);
+        // wordSubmit.setText(player1Word);
         player1Pts = 0;
         player2Pts = 0;
+*/
 
         //Set the board and send Boggle Board message if it is Master
         if(isMaster){
-            Toast.makeText(this,"Is Master", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Is Master", Toast.LENGTH_LONG).show();
 
+            // TODO - MAY NOT BE NECESSARY?
             // set its own board first
-            startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+            startActivity(new Intent(CutthroatMode.this, TwoPlayer.class));
 
             board = Container.getInstance().getBoard();
-
-            //System.out.println("###### BOARD " + board);
-
-            //boardSolution = Container.getInstance().getSolution();
-
-            //String message = "";
-            //send word list to player 2
-            //message = board.toString();
-//          for(int i = 0; i < searchedWordList.size(); i++){
-//              message = message + searchedWordList.get(i) + " ";
-//          }
-            // sendMessageNEW(CHAT, board.toString());
             sendMessageNEW(BOGGLE_BOARD, board.toString());
-            //sendMessageNEW(WORD_LIST, boardSolution.toString());
         }
 
-        //resets the submit button
-//      editText = (TextView)findViewById(R.id.SubmitScoreBtn);
-//      editText.setText("Submit");
+/*
         player1Done = false;
         player2Done = false;
-//
+
+        // TODO - DELETE?
 //      //display the boggle board
 //      resetMatrix();
 
@@ -572,6 +565,7 @@ public class BluetoothChat extends FragmentActivity {
 
 //      //start timer
 //      setTimer();
+*/
 
         //keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

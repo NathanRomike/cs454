@@ -6,57 +6,43 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-//import java.io.FileOutputStream;
-//import java.io.File;
-//import android.content.res.AssetManager;
-//import android.content.res.Resources;
 
 
 public class Container {
-
     private static final String DICTIONARY = "english-dictionary.txt";
-
-
     private static final String HIGHSCORES = "highscores.txt";
 
-    private HashMap dictionary;            // Dictionary of valid words
-    private ArrayList<String> solution; //board solution
+    private HashMap dictionary;
+    private ArrayList<String> solution;
+    private static List<Character> board = new ArrayList<Character>();
 
-
-    private static List<Character> board = new ArrayList<Character>(); //board with 16 letters
-
-    private ArrayList<HashMap<String, Integer>> highscores; // List of highscores
-    // need dictionary data type to hold highscores and the player name
+    private ArrayList<HashMap<String, Integer>> highscores;
     private HashMap<String, Integer> highscoresDic;
 
-    private ArrayList<String> wordList;    // List of words
+    private ArrayList<String> wordList;
 
-    private String word;     // Word
-    private int wordScore;   // Word score
-    private int player;      // Player #
-    private int playerScore; // Player score
-    private String user;     // Username
+    private BluetoothChat bluetoothChat;
 
-    public void setBoard(List<Character> brd){this.board=brd;}
-    public static List<Character> getBoard() {return board;}
+    private String word;
+    private int wordScore;
+    private int player;
+    private int playerScore;
+    private String user;
+    private int valid;
 
+    public void setBoard(List<Character> board) { this.board = board; }
+    public static List<Character> getBoard() { return board; }
 
-    public static String getHIGHSCORES() {return HIGHSCORES;}
+    public static String getHIGHSCORES() { return HIGHSCORES; }
     public HashMap getDictionary() { return dictionary; }
     public void setDictionary(HashMap dictionary) { this.dictionary = dictionary; }
     public ArrayList<String> getSolution() { return solution; }
     public void setSolution(ArrayList<String> solution) { this.solution = solution; }
-
-//    public ArrayList<HashMap<String, Integer>> setHighscores(){}
-    // each element in ArrayList is a HashMap
-    // each HashMap contain one key(player name) value(player score) pair
     public ArrayList<HashMap<String, Integer>> getHighscores() { return highscores; }
     public void setHighscores(ArrayList<HashMap<String, Integer>> highscores) {
         this.highscores = highscores;
     }
-    // this function will update the highscore
-    // this array list only contain 10 elements.
-    // have to delete last element when there a new highscore appear
+
     public void updateHighscores(HashMap<String, Integer> oneHighscore) {
         if(this.highscores == null){
             this.highscores = new ArrayList<HashMap<String, Integer>>();
@@ -95,6 +81,10 @@ public class Container {
         return -1;
     }
 
+    // TODO - VALID USED FOR TWO-PLAYER COMMUNICATION
+    public void setValid(int valid) { this.valid = valid; }
+    public int getValid() { return this.valid; }
+    public void resetValid() { this.valid = -1; }
     public ArrayList<String> getWordList() { return wordList; }
     public void setWordList(ArrayList<String> wordList) { this.wordList = wordList; }
     public String getWord() { return word; }
@@ -113,17 +103,11 @@ public class Container {
     }
     public HashMap<String, Integer> getHighscoresDic(){return this.highscoresDic;}
 
+    // TODO - CREATE A FUNCITON TO RESET ALL VARIABLES AFTER A GAME!
+
+    public void setBluetoothChat(BluetoothChat bluetoothChat) { this.bluetoothChat = bluetoothChat; }
+    public BluetoothChat getBluetoothChat() { return bluetoothChat; }
+
     private static final Container container = new Container();
     public static Container getInstance() { return container; }
-
-//    public void writeToFile(){
-//
-//        AssetManager am = getAssets();
-//        File file = new File(getAssets() + HIGHSCORES);
-//
-//
-//        if (!file.exists()) {
-//            file.createNewFile();
-//        }
-//    }
 }

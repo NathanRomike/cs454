@@ -39,13 +39,14 @@ import java.io.PrintWriter;
 
 
 public class TwoPlayer extends FragmentActivity {
-    private static Dictionary dictionary;
-
+    private BluetoothChat bluetoothChat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player);
+
+        bluetoothChat = Container.getInstance().getBluetoothChat();
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -70,43 +71,11 @@ public class TwoPlayer extends FragmentActivity {
             public void onFinish() {
                 timerTextField.setText("TIME'S UP!");
                 Container container = Container.getInstance();
-                container.setHighscoresDic(container.getUser(), container.getPlayerScore());
-                String fileName = Container.getHIGHSCORES();
+                String score = "" + container.getPlayerScore();
 
-                // read rank from file and store into highscores
-                String filePath = parentPath+"/"+fileName;
-                File file = new File(filePath);
-
-                if(file.exists()){
-                    try {
-                        container.setHighscores(readHighscoreFromFile());
-                        container.updateHighscores(container.getHighscoresDic());
-                        // delete the content in file
-
-                        emptyFileContent(filePath);
-                        // rewrite rank into file
-//                        container.setHighscores(readHighscoreFromFile());
-
-                        writeToFile();
-                        container.setHighscores(readHighscoreFromFile());
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (!bluetoothChat.isMaster()) {
+                    bluetoothChat.sendMessageNEW(bluetoothChat.END_GAME, score);
                 }
-                else {
-                    try {
-                        container.updateHighscores(container.getHighscoresDic());
-                        writeToFile();
-                        readHighscoreFromFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // go to highscore activity from this OnePlayer activity
-                goToHighScores();
             }
         }.start();
     }
@@ -122,22 +91,29 @@ public class TwoPlayer extends FragmentActivity {
         word = word.toLowerCase();
         int wordSize=word.length();
 
+        // TODO - if cutthroat mode.
+        // TODO - make VALID store response for sendmessagenew call.
+        //if (!bluetoothChat.isMaster()) {
+          //  bluetoothChat.sendMessageNEW(bluetoothChat.PLAYER_TWO_WORD, word);
 
+            // TODO - client waits for response.
+            //while (container.getValid() == -1) { }
 
-        submitWord(word);
+            //response = bluetoothChat.VALID;
+        //}
 
+        Boolean newWord = submitWord(word);
 
-        int score = container.getPlayerScore();
-        score += computeScore(wordSize);
-
-        container.setPlayerScore(score);
-        WordSelection.unhighlightAll();
-
-        // update the score displayed on top left of screen every time hit submit button
-        updateScoreOnTop();
+        if (newWord) {
+            int score = container.getPlayerScore();
+            score += computeScore(wordSize);
+            container.setPlayerScore(score);
+            WordSelection.unhighlightAll();
+            updateScoreOnTop();
+        }
     }
 
-    public static void submitWord(String word)
+    public static Boolean submitWord(String word)
     {
         Container container = Container.getInstance();
         int wordSize;
@@ -148,10 +124,10 @@ public class TwoPlayer extends FragmentActivity {
             if (wordSize < 3) {
                 WordSelection.unhighlightAll();
                 container.setWord(null);
-                return;
+                return false;
             }
         } catch (Exception e) {
-            return;
+            return false;
         }
 
         ArrayList<String> wordList = container.getWordList();
@@ -163,7 +139,7 @@ public class TwoPlayer extends FragmentActivity {
                 if (word.equals(words.next())) {
                     WordSelection.unhighlightAll();
                     container.setWord(null);
-                    return;
+                    return false;
                 }
             }
         }
@@ -172,17 +148,17 @@ public class TwoPlayer extends FragmentActivity {
             wordList.add(word);
             container.setWordList(wordList);
             container.setWord(null);
+            return true;
         } else {
             WordSelection.unhighlightAll();
             container.setWord(null);
-            return;
+            return false;
         }
     }
 
     public static int computeScore(int wordSize){
-
         Container container = Container.getInstance();
-        int score =container.getPlayerScore();
+        int score = container.getPlayerScore();
 
         switch (wordSize) {
             case 0:
@@ -241,10 +217,6 @@ public class TwoPlayer extends FragmentActivity {
 
     public void goToHighScores() {
         Intent intent = new Intent(this, Highscores.class);
-//        Container container = Container.getInstance();
-//        // pass player name from this activity to onePlayer activity
-//        intent.putExtra("playerScore", container.getPlayerScore());
-//        intent.putExtra("playerName", container.getUser());
         startActivity(intent);
     }
 
@@ -280,8 +252,8 @@ public class TwoPlayer extends FragmentActivity {
             writer.newLine();
 //            }
         }
-
         writer.close();
+
     }
 
     public void emptyFileContent(String toDeletePath) throws IOException {
@@ -303,6 +275,7 @@ public class TwoPlayer extends FragmentActivity {
 //        FileInputStream reader = openFileInput(fileName);
         ArrayList<HashMap<String, Integer>> rank =  new ArrayList<HashMap<String, Integer>>();
         String temp = "";
+
         try {
             InputStream inputStream = openFileInput(fileName);
             // this is how to get file path
@@ -325,19 +298,15 @@ public class TwoPlayer extends FragmentActivity {
                 inputStream.close();
                 temp = stringBuilder.toString();
             }
-            else{
+            else {
                 return null;
             }
-
         } catch (FileNotFoundException e) {
             Log.e("OnePlayer activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("OnePlayer activity", "Can not read file: " + e.toString());
-
-//        container.setHighscoresDic(container.getUser(), container.getPlayerScore());
-//        container.updateHighscores(container.getHighscoresDic());
-
         }
+
         return rank;
     }
 }

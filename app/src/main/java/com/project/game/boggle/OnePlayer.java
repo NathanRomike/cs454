@@ -59,7 +59,6 @@ public class OnePlayer extends FragmentActivity {
         // display player name on middle of top screen
         displayPlayerName();
 
-
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -120,7 +119,6 @@ public class OnePlayer extends FragmentActivity {
                     }
                 }
 
-                // go to highscore activity from this OnePlayer activity
                 goToHighScores();
             }
         }.start();
@@ -131,28 +129,21 @@ public class OnePlayer extends FragmentActivity {
         startActivity(intent);
     }
 
-
     public void onSubmit(View view) {
         Container container = Container.getInstance();
         String word = container.getWord();
         word = word.toLowerCase();
         int wordSize=word.length();
-
-
-
         submitWord(word);
-
 
         int score = container.getPlayerScore();
         score += computeScore(wordSize);
-
         container.setPlayerScore(score);
         WordSelection.unhighlightAll();
 
         // update the score displayed on top left of screen every time hit submit button
         updateScoreOnTop();
     }
-
 
     public static void submitWord(String word)
     {
@@ -171,7 +162,6 @@ public class OnePlayer extends FragmentActivity {
             return;
         }
 
-
         ArrayList<String> wordList = container.getWordList();
 
         if (!wordList.isEmpty()) {
@@ -186,7 +176,6 @@ public class OnePlayer extends FragmentActivity {
             }
         }
 
-
         if (Container.getInstance().getDictionary().containsKey(word)) {
             wordList.add(word);
             container.setWordList(wordList);
@@ -196,15 +185,11 @@ public class OnePlayer extends FragmentActivity {
             container.setWord(null);
             return;
         }
-
     }
 
-
-
     public static int computeScore(int wordSize){
-
         Container container = Container.getInstance();
-        int score =container.getPlayerScore();
+        int score = container.getPlayerScore();
 
         switch (wordSize) {
             case 0:
@@ -242,7 +227,6 @@ public class OnePlayer extends FragmentActivity {
         return score;
     }
 
-
     public void displayPlayerName() {
         Container container = Container.getInstance();
         TextView playerNameTextField = (TextView) findViewById(R.id.user_name);
@@ -257,19 +241,13 @@ public class OnePlayer extends FragmentActivity {
         scoreTextField.setText(scoreAsString);
     }
 
-
     public void onSolve(View view) {
         Intent intent = new Intent(this, Solution.class);
         startActivity(intent);
     }
 
-
     public void goToHighScores() {
         Intent intent = new Intent(this, Highscores.class);
-//        Container container = Container.getInstance();
-//        // pass player name from this activity to onePlayer activity
-//        intent.putExtra("playerScore", container.getPlayerScore());
-//        intent.putExtra("playerName", container.getUser());
         startActivity(intent);
     }
 
@@ -282,19 +260,14 @@ public class OnePlayer extends FragmentActivity {
         // Setting Dialog Message
         alertDialog.setMessage("Are you sure you want to start a new game?");
 
-        // Setting Icon to Dialog
-        //alertDialog.setIcon(R.drawable.warning_icon);
-
         // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
                 //to reset the board for one player only
                 Container.getInstance().getBoard().clear();
 
                 finish();
                 startActivity(getIntent());
-
             }
         });
 
@@ -362,15 +335,13 @@ public class OnePlayer extends FragmentActivity {
 
     }
 
-
-//    public String readHighscoreFromFile() throws IOException {
-
     public ArrayList<HashMap<String, Integer>> readHighscoreFromFile() throws IOException {
         Container container = Container.getInstance();
         String fileName = Container.getHIGHSCORES();
 //        FileInputStream reader = openFileInput(fileName);
         ArrayList<HashMap<String, Integer>> rank =  new ArrayList<HashMap<String, Integer>>();
         String temp = "";
+
         try {
             InputStream inputStream = openFileInput(fileName);
             // this is how to get file path
@@ -393,21 +364,15 @@ public class OnePlayer extends FragmentActivity {
                 inputStream.close();
                 temp = stringBuilder.toString();
             }
-            else{
+            else {
                 return null;
             }
-
         } catch (FileNotFoundException e) {
             Log.e("OnePlayer activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("OnePlayer activity", "Can not read file: " + e.toString());
-
-//        container.setHighscoresDic(container.getUser(), container.getPlayerScore());
-//        container.updateHighscores(container.getHighscoresDic());
-
         }
+
         return rank;
     }
-
-
 }
