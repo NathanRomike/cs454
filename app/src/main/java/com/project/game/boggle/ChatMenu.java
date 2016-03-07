@@ -16,46 +16,47 @@
 
 package com.project.game.boggle;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+        import android.app.Activity;
+        import android.app.Application;
+        import android.bluetooth.BluetoothAdapter;
+        import android.bluetooth.BluetoothDevice;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import android.os.Message;
+        import android.util.Log;
+        import android.view.KeyEvent;
+        import android.view.LayoutInflater;
+        import android.view.Menu;
+        import android.view.MenuInflater;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.Window;
+        import android.view.View.OnClickListener;
+        import android.view.inputmethod.EditorInfo;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.LinearLayout;
+        import android.widget.ListView;
+        import android.widget.TextView;
+        import android.widget.Toast;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentActivity;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import android.view.WindowManager;
+        import java.lang.reflect.Array;
+        import java.util.Arrays;
+        import java.util.Collections;
+        import java.util.List;
+        import java.util.ArrayList;
+        import java.util.Set;
+        import java.util.HashSet;
+        import android.view.WindowManager;
 
 /**
  * This is the bluetooth_main Activity that displays the current chat session.
  */
-public class BluetoothChat extends FragmentActivity {
+public class ChatMenu extends FragmentActivity {
     private static Dictionary dictionary;
     // Debugging
     private static final String TAG = "BluetoothChat";
@@ -124,6 +125,7 @@ public class BluetoothChat extends FragmentActivity {
     private StringBuffer mOutStringBuffer;
     // Local Bluetooth adapter
     private BluetoothAdapter mBluetoothAdapter = null;
+    private BluetoothContainer mBluetoothContainer = null;
     // Member object for the chat services
     private BluetoothChatService mChatService = null;
 
@@ -146,14 +148,14 @@ public class BluetoothChat extends FragmentActivity {
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        mBluetoothContainer = (BluetoothContainer) getApplicationContext();
+
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
-
-        Container.getInstance().setBluetoothChat(this);
 
         // TODO - check if redundant - this may already be handled in the TwoPlayer activity!
         // TODO - also this may be handled differently per mode - basic/cutthroat.
@@ -203,8 +205,8 @@ public class BluetoothChat extends FragmentActivity {
     private void setupChat() {
         Log.d(TAG, "setupChat()");
 
-        // TODO - WHY IS THIS HERE TWICE (SEE BELOW)
         mChatService = new BluetoothChatService(this, mHandler);
+        mBluetoothContainer.setmBluetoothChatService(mChatService);
 
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message);
@@ -220,21 +222,27 @@ public class BluetoothChat extends FragmentActivity {
         Button basicSButton = (Button) findViewById(R.id.button_basicS);
         Button cutthroatButton = (Button) findViewById(R.id.button_cutthroat);
 
-        basicSButton.setOnClickListener(new OnClickListener() {
+        basicSButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { startGame(); }
+            public void onClick(View v) {
+                if (isMaster()) {
+                    startGame();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Waiting on Player 1", Toast.LENGTH_LONG).show();
+                }
+            }
         });
 
         // TODO - cutthroat button
-        cutthroatButton.setOnClickListener(new OnClickListener() {
+        cutthroatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
                 board = BoardFragment.getBoard();
             }
         });
 
-        mSendButton.setOnClickListener(new OnClickListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Send a message using content of the edit text widget
                 TextView view = (TextView) findViewById(R.id.edit_text_out);
@@ -243,10 +251,6 @@ public class BluetoothChat extends FragmentActivity {
                 sendMessageNEW(CHAT, message);
             }
         });
-
-        // TODO - WHY IS THIS HERE TWICE (SEE ABOVE)
-        // Initialize the BluetoothChatService to perform bluetooth connections
-        mChatService = new BluetoothChatService(this, mHandler);
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
@@ -403,7 +407,7 @@ public class BluetoothChat extends FragmentActivity {
 
                         Container.getInstance().setBoard(board);
 
-                        startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+                        startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
 
                         //if the message is a word list parse all the words and add them to your searched word list
                     }else if(messageCode == WORD_LIST){
@@ -448,7 +452,7 @@ public class BluetoothChat extends FragmentActivity {
 //                        Toast.makeText(getApplicationContext(),"Player2 done",Toast.LENGTH_SHORT).show();
 //                        if(player1Done){
 //                            endGame();
-                    //players chat
+                        //players chat
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                         break;
@@ -526,20 +530,10 @@ public class BluetoothChat extends FragmentActivity {
 
         gameRunning = true;
 
-        //clear these variables before starting
-        player1WordList.clear();
-        player2WordList.clear();
-        player1Word = "";
-       // wordSubmit.setText(player1Word);
-        player1Pts = 0;
-        player2Pts = 0;
-
         //Set the board and send Boggle Board message if it is Master
         if(isMaster){
-            Toast.makeText(this,"Is Master", Toast.LENGTH_SHORT).show();
-
             // set its own board first
-            startActivity(new Intent(BluetoothChat.this, TwoPlayer.class));
+            startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
 
             board = Container.getInstance().getBoard();
 

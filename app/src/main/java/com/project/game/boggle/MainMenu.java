@@ -52,7 +52,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void twoPlayerScreen(View view) {
-        Intent intent = new Intent(this, BluetoothChat.class);
+        Intent intent = new Intent(this, ChatMenu.class);
         startActivity(intent);
     }
 

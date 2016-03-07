@@ -21,8 +21,6 @@ public class Container {
 
     private ArrayList<String> wordList;
 
-    private BluetoothChat bluetoothChat;
-
     private String word;
     private int wordScore;
     private int player;
@@ -103,10 +101,9 @@ public class Container {
     }
     public HashMap<String, Integer> getHighscoresDic(){return this.highscoresDic;}
 
-    // TODO - CREATE A FUNCITON TO RESET ALL VARIABLES AFTER A GAME!
+    public void reset() {
 
-    public void setBluetoothChat(BluetoothChat bluetoothChat) { this.bluetoothChat = bluetoothChat; }
-    public BluetoothChat getBluetoothChat() { return bluetoothChat; }
+    }
 
     private static final Container container = new Container();
     public static Container getInstance() { return container; }

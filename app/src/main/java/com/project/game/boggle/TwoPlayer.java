@@ -39,14 +39,16 @@ import java.io.PrintWriter;
 
 
 public class TwoPlayer extends FragmentActivity {
-    private BluetoothChat bluetoothChat;
+    private BluetoothContainer mBluetooth;
+    private BluetoothChatService mBluetoothChatService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player);
 
-        bluetoothChat = Container.getInstance().getBluetoothChat();
+        mBluetooth = (BluetoothContainer) getApplicationContext();
+        mBluetoothChatService = mBluetooth.getmBluetoothChatService();
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -73,9 +75,7 @@ public class TwoPlayer extends FragmentActivity {
                 Container container = Container.getInstance();
                 String score = "" + container.getPlayerScore();
 
-                if (!bluetoothChat.isMaster()) {
-                    bluetoothChat.sendMessageNEW(bluetoothChat.END_GAME, score);
-                }
+                sendMessage(6, score);
             }
         }.start();
     }
@@ -308,5 +308,11 @@ public class TwoPlayer extends FragmentActivity {
         }
 
         return rank;
+    }
+
+    public void sendMessage(int messageCode, String message) {
+        String fullMessage = messageCode + message;
+        byte[] send = fullMessage.getBytes();
+        mBluetoothChatService.write(send);
     }
 }
