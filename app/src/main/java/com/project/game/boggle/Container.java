@@ -20,6 +20,7 @@ public class Container {
     private HashMap<String, Integer> highscoresDic;
 
     private ArrayList<String> wordList;
+    private ArrayList<String> otherPlayer_wordList = new ArrayList<String>();
 
     private String word;
     private int wordScore;
@@ -27,6 +28,29 @@ public class Container {
     private int playerScore;
     private String user;
     private int valid;
+
+    private boolean isPlayer1Done;
+    private boolean isPlayer2Done;
+    private boolean isMaster = false;
+    private int otherPlayerScore;
+
+    private boolean isCutthroat = false;
+    private boolean wordMatch = false;
+
+    public void setPlayer1Done(boolean val) {this.isPlayer1Done = val ;}
+    public boolean getPlayer1Done() {return isPlayer1Done;}
+    public void setPlayer2Done(boolean val) {this.isPlayer2Done = val ;}
+    public boolean getPlayer2Done() {return isPlayer2Done;}
+    public void setIsMaster(boolean val) {this.isCutthroat = val ;}
+    public boolean getIsMaster() {return isMaster;}
+    public void setOtherPlayerScore(int i) {this.otherPlayerScore=i; }
+    public int getOtherPlayerScore() {return otherPlayerScore;}
+    public void setIsCutthroat(boolean val) {this.isCutthroat = val ;}
+    public boolean getIsCutthroat() {return isCutthroat;}
+
+    public void setWordMatch(boolean val) {this.wordMatch = val ;}
+    public boolean getWordMatch() {return wordMatch ;}
+
 
     public void setBoard(List<Character> board) { this.board = board; }
     public static List<Character> getBoard() { return board; }
@@ -83,8 +107,13 @@ public class Container {
     public void setValid(int valid) { this.valid = valid; }
     public int getValid() { return this.valid; }
     public void resetValid() { this.valid = -1; }
+
     public ArrayList<String> getWordList() { return wordList; }
     public void setWordList(ArrayList<String> wordList) { this.wordList = wordList; }
+
+    public ArrayList<String> getOtherPlayer_WordList() { return otherPlayer_wordList; }
+    public void addToOtherPlayer_WordList(String str) { this.otherPlayer_wordList.add(str); }
+
     public String getWord() { return word; }
     public void setWord(String word) { this.word = word; }
     public int getWordScore() { return wordScore; }

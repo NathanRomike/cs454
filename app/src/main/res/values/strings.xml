@@ -27,8 +27,8 @@
     <!--bluetooth-->
     <!--  BluetoothChat -->
     <string name="send">Send</string>
-    <string name="basic">Basic</string>
-    <string name="basic_multi">Basic</string>
+    <string name="basic">Basic Mode - One Round</string>
+    <string name="basic_multi">Basic Mode - Multi Round</string>
     <string name="cutthroat">Cutthroat Mode</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>

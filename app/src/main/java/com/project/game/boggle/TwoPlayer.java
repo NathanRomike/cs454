@@ -33,6 +33,8 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import android.util.Log;
+import android.widget.Toast;
+
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -46,6 +48,7 @@ public class TwoPlayer extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player);
+
 
         mBluetooth = (BluetoothContainer) getApplicationContext();
         mBluetoothChatService = mBluetooth.getmBluetoothChatService();
@@ -75,7 +78,30 @@ public class TwoPlayer extends FragmentActivity {
                 Container container = Container.getInstance();
                 String score = "" + container.getPlayerScore();
 
+                if(container.getIsMaster())
+                {
+                    container.setPlayer1Done(true);
+                }
+                else
+                {
+                    container.setPlayer2Done(true);
+                }
+
+                sendMessage(8, "");
                 sendMessage(6, score);
+
+
+                if(Container.getInstance().getPlayer1Done() && Container.getInstance().getPlayer2Done()) {
+                    if (container.getPlayerScore() > container.getOtherPlayerScore()) {
+                        Toast.makeText(getApplicationContext(), "YOU WON!", Toast.LENGTH_LONG).show();
+                    } else if (container.getPlayerScore() == container.getOtherPlayerScore()){
+                        Toast.makeText(getApplicationContext(), "TIE!", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
+                    }
+                }
+
             }
         }.start();
     }
@@ -94,29 +120,34 @@ public class TwoPlayer extends FragmentActivity {
         // TODO - if cutthroat mode.
         // TODO - make VALID store response for sendmessagenew call.
         //if (!bluetoothChat.isMaster()) {
-          //  bluetoothChat.sendMessageNEW(bluetoothChat.PLAYER_TWO_WORD, word);
+        //  bluetoothChat.sendMessageNEW(bluetoothChat.PLAYER_TWO_WORD, word);
 
-            // TODO - client waits for response.
-            //while (container.getValid() == -1) { }
+        // TODO - client waits for response.
+        //while (container.getValid() == -1) { }
 
-            //response = bluetoothChat.VALID;
+        //response = bluetoothChat.VALID;
         //}
 
         Boolean newWord = submitWord(word);
 
         if (newWord) {
             int score = container.getPlayerScore();
-            score += computeScore(wordSize);
-            container.setPlayerScore(score);
-            WordSelection.unhighlightAll();
-            updateScoreOnTop();
+
+                score = computeScore(wordSize);
+                container.setPlayerScore(score);
+                WordSelection.unhighlightAll();
+                updateScoreOnTop();
+
         }
     }
 
-    public static Boolean submitWord(String word)
+    public Boolean submitWord(String word)
     {
         Container container = Container.getInstance();
         int wordSize;
+
+        container.setWordMatch(false);
+
 
         try {
             wordSize = word.length();
@@ -132,6 +163,7 @@ public class TwoPlayer extends FragmentActivity {
 
         ArrayList<String> wordList = container.getWordList();
 
+
         if (!wordList.isEmpty()) {
             Iterator words = wordList.iterator();
 
@@ -144,11 +176,56 @@ public class TwoPlayer extends FragmentActivity {
             }
         }
 
+
+        ArrayList<String> otherPlayer;
+
         if (Container.getInstance().getDictionary().containsKey(word)) {
-            wordList.add(word);
-            container.setWordList(wordList);
-            container.setWord(null);
-            return true;
+
+            //for cutthroat mode
+            if(container.getIsCutthroat()){
+
+
+                otherPlayer = container.getOtherPlayer_WordList();
+
+
+
+                if (!otherPlayer.isEmpty()) {
+
+                    Iterator words2 = otherPlayer.iterator();
+
+                    while (words2.hasNext()) {
+                        if (word.equals(words2.next())) {
+                            WordSelection.unhighlightAll();
+                            container.setWord(null);
+                            return false;
+                        }
+                    }
+
+                }
+
+
+                    wordList.add(word);
+
+                    container.setWordList(wordList);
+                    container.setWord(null);
+
+
+                    sendMessage(9, word);
+                    return true;
+
+
+            } else {
+
+                wordList.add(word);
+
+                container.setWordList(wordList);
+                container.setWord(null);
+                return true;
+            }
+
+
+
+
         } else {
             WordSelection.unhighlightAll();
             container.setWord(null);
@@ -162,10 +239,10 @@ public class TwoPlayer extends FragmentActivity {
 
         switch (wordSize) {
             case 0:
-                score +=0;
+                score += 0;
                 break;
             case 1:
-                score +=0;
+                score += 0;
                 break;
             case 2:
                 score += 0;
@@ -215,11 +292,6 @@ public class TwoPlayer extends FragmentActivity {
         startActivity(intent);
     }
 
-    public void goToHighScores() {
-        Intent intent = new Intent(this, Highscores.class);
-        startActivity(intent);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -230,89 +302,10 @@ public class TwoPlayer extends FragmentActivity {
         super.onPause();
     }
 
-    public void writeToFile() throws IOException {
-        Container container = Container.getInstance();
-        String fileName = Container.getHIGHSCORES();
-
-//        FileOutputStream writer = openFileOutput(fileName, Context.MODE_PRIVATE);
-        OutputStream outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
-
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-        BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-        int size = container.getHighscores().size();
-        for (int i = 0; i < size; i++) {
-            Iterator index = container.getHighscores().get(i).keySet().iterator();
-            String tempPlayerName = (String) index.next();
-            String score = container.getHighscores().get(i).get(tempPlayerName).toString();
-
-//            for(int j = 0; j < 5; j++) {
-            writer.write(tempPlayerName);
-            writer.write(",");
-            writer.write(score);
-            writer.newLine();
-//            }
-        }
-        writer.close();
-
-    }
-
-    public void emptyFileContent(String toDeletePath) throws IOException {
-        Container container = Container.getInstance();
-        String fileName = Container.getHIGHSCORES();
-        File file =  new File(toDeletePath);
-        Boolean fileBoolean = file.delete();
-//        FileOutputStream writer = openFileOutput(fileName, Context.MODE_PRIVATE);
-
-//        PrintWriter pw = new PrintWriter(fileName);
-//        pw.write("");
-//        pw.close();
-
-    }
-
-    public ArrayList<HashMap<String, Integer>> readHighscoreFromFile() throws IOException {
-        Container container = Container.getInstance();
-        String fileName = Container.getHIGHSCORES();
-//        FileInputStream reader = openFileInput(fileName);
-        ArrayList<HashMap<String, Integer>> rank =  new ArrayList<HashMap<String, Integer>>();
-        String temp = "";
-
-        try {
-            InputStream inputStream = openFileInput(fileName);
-            // this is how to get file path
-//            String path = this.getFilesDir().getAbsolutePath();
-
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    HashMap<String, Integer> tempPlayerAndScore = new HashMap<String, Integer>();
-                    String[] splitString = receiveString.split("\\,");
-//                    stringBuilder.append(receiveString);
-                    tempPlayerAndScore.put(splitString[0], Integer.parseInt(splitString[1]));
-                    rank.add(tempPlayerAndScore);
-                }
-
-                inputStream.close();
-                temp = stringBuilder.toString();
-            }
-            else {
-                return null;
-            }
-        } catch (FileNotFoundException e) {
-            Log.e("OnePlayer activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("OnePlayer activity", "Can not read file: " + e.toString());
-        }
-
-        return rank;
-    }
-
     public void sendMessage(int messageCode, String message) {
         String fullMessage = messageCode + message;
         byte[] send = fullMessage.getBytes();
         mBluetoothChatService.write(send);
     }
+
 }

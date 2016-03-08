@@ -18,13 +18,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/chat_layout"
         android:layout_width="fill_parent"
         android:layout_height="448dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
         <ListView android:id="@+id/in"
             android:layout_width="fill_parent"
@@ -51,13 +53,21 @@
                 />
         </LinearLayout>
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <Button android:id="@+id/button_basicS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/basic"
+                />
+
+            <Button android:id="@+id/button_basicM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/basic_multi"
                 />
 
             <Button android:id="@+id/button_cutthroat"
@@ -69,87 +79,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!--
-    <LinearLayout
-        android:id="@+id/board_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="448dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/colorPrimary">
-
-            <TextView android:id="@+id/user_score"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/user_score"
-                android:textColor="@color/white" />
-
-            <TextView android:id="@+id/user_name"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/user_name"
-                android:textColor="@color/white" />
-
-            <TextView android:id="@+id/countdown_timer"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/countdown_timer"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="448dp"
-            >
-            <fragment
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:name="com.project.game.boggle.BoardFragment"
-                android:id="@+id/fragment"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                tools:layout="@layout/content_board" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:background="@color/colorPrimary">
-
-            <Button android:id="@+id/show_words"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/words_button"
-                android:onClick="onShowWords" />
-
-            <Button android:id="@+id/submit_word"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/submit_button"
-                android:onClick="onSubmit" />
-
-            <Button android:id="@+id/solve"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/solve_button"
-                android:onClick="onSolve" />
-        </LinearLayout>
-    </LinearLayout>
-    -->
 </LinearLayout>
 

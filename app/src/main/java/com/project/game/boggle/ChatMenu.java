@@ -16,42 +16,43 @@
 
 package com.project.game.boggle;
 
-        import android.app.Activity;
-        import android.app.Application;
-        import android.bluetooth.BluetoothAdapter;
-        import android.bluetooth.BluetoothDevice;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.os.Handler;
-        import android.os.Message;
-        import android.util.Log;
-        import android.view.KeyEvent;
-        import android.view.LayoutInflater;
-        import android.view.Menu;
-        import android.view.MenuInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.Window;
-        import android.view.View.OnClickListener;
-        import android.view.inputmethod.EditorInfo;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.LinearLayout;
-        import android.widget.ListView;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
+import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
-        import java.lang.reflect.Array;
-        import java.util.Arrays;
-        import java.util.Collections;
-        import java.util.List;
-        import java.util.ArrayList;
-        import java.util.Set;
-        import java.util.HashSet;
-        import android.view.WindowManager;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import android.view.WindowManager;
 
 /**
  * This is the bluetooth_main Activity that displays the current chat session.
@@ -78,6 +79,12 @@ public class ChatMenu extends FragmentActivity {
     public static final int NEW_GAME = 5;
     public static final int END_GAME = 6;
     public static final int CHAT = 7;
+    public static final int PLAYER_DONE = 8;
+    public static final int SEND_WORD = 9;
+    public static final int RESULT = 10;
+
+
+
 
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
@@ -93,6 +100,7 @@ public class ChatMenu extends FragmentActivity {
     private boolean isMaster = false;
     //Boolean to determine if the game is running
     private boolean gameRunning = false;
+    private int otherPlayerScore;
 
     // Layout Views
     private TextView mTitle;
@@ -129,6 +137,9 @@ public class ChatMenu extends FragmentActivity {
     // Member object for the chat services
     private BluetoothChatService mChatService = null;
 
+
+
+    private TextView timerTextField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,6 +178,8 @@ public class ChatMenu extends FragmentActivity {
         player2Ready = false;
         player1Done = false;
         player2Done = false;
+
+
     }
 
     @Override
@@ -225,20 +238,30 @@ public class ChatMenu extends FragmentActivity {
         basicSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Container.getInstance().setIsCutthroat(false);
+
                 if (isMaster()) {
                     startGame();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Waiting on Player 1", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Find a device and connect to it first", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        // TODO - cutthroat button
         cutthroatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
-                board = BoardFragment.getBoard();
+
+                Container.getInstance().setIsCutthroat(true);
+
+                if (isMaster()) {
+                    sendMessageNEW(GAME_MODE, "cutthroat");
+                    startGame();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Find a device and connect to it first", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -256,63 +279,44 @@ public class ChatMenu extends FragmentActivity {
         mOutStringBuffer = new StringBuffer("");
     }
 
-    @Override
-    public synchronized void onPause() {
-        super.onPause();
-        if(D) Log.e(TAG, "- ON PAUSE -");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(D) Log.e(TAG, "-- ON STOP --");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Stop the Bluetooth chat services
-        if (mChatService != null) mChatService.stop();
-        if(D) Log.e(TAG, "--- ON DESTROY ---");
-    }
-
-    private void ensureDiscoverable() {
-        if(D) Log.d(TAG, "ensure discoverable");
-        if (mBluetoothAdapter.getScanMode() !=
-                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
-        }
-    }
 
     public Boolean isMaster() {
         return isMaster;
     }
 
-    // TODO - not in use?
-    /**
-     * Sends a message.
-     * @param message  A string of text to send.
-     */
-    private void sendMessage(String message) {
-        // Check that we're actually connected before trying anything
-        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
+    /*
+ * Start the Boggle game
+ */
+    private void startGame(){
+
+        gameRunning = true;
+
+        //Set the board and send Boggle Board message if it is Master
+        if(isMaster){
+
+            board = BoardGenerator.getRandomDice();
+            Container.getInstance().setBoard(board);
+
+            // set its own board first
+            startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
+
+            timerTextField = (TextView) findViewById(R.id.countdown_timer);
+
+            //sendMessageNEW(NEW_GAME, "");
+            sendMessageNEW(BOGGLE_BOARD, board.toString());
+            //sendMessageNEW(WORD_LIST, boardSolution.toString());
         }
 
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            mChatService.write(send);
+        //resets the submit button
+        player1Done = false;
+        player2Done = false;
 
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
-        }
+
+        //keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
+
+
 
     /*
      * Sends a message as a string of text to send to player 2
@@ -330,7 +334,7 @@ public class ChatMenu extends FragmentActivity {
         mChatService.write(send);
 
         mOutStringBuffer.setLength(0);
-        mOutEditText.setText(Container.getInstance().getBoard().toString());
+        mOutEditText.setText(fullMessage);
     }
 
     // The action listener for the EditText widget, to listen for the return key
@@ -367,6 +371,7 @@ public class ChatMenu extends FragmentActivity {
                         case BluetoothChatService.STATE_CONNECTING:
                             mTitle.setText(R.string.title_connecting);
                             isMaster=true;
+                            Container.getInstance().setIsMaster(true);
                             break;
                         case BluetoothChatService.STATE_LISTEN:
                         case BluetoothChatService.STATE_NONE:
@@ -391,36 +396,40 @@ public class ChatMenu extends FragmentActivity {
                     //get the rest of the message
                     String message = readMessage.substring(1);
 
+                    Container container = Container.getInstance();
+                    ArrayList<String> otherPlayerWordList;
+
                     //test the message code to see what type of message was sent
                     if(messageCode == GAME_MODE){
+
+                            container.setIsCutthroat(true);
+
+
                         //if the message is a boggle board parse all the letters and add them to your board
                     }else if(messageCode == BOGGLE_BOARD){
 
                         String board_str = message.replaceAll("[^a-zA-Z]", "");
 
                         board = new ArrayList<Character>();
-                        //Set<Character> unique = new HashSet<Character>();
                         for(char c : board_str.toCharArray()) {
                             board.add(c);
-                            //unique.add(c);
                         }
 
-                        Container.getInstance().setBoard(board);
+                        container.setBoard(board);
 
                         startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
 
                         //if the message is a word list parse all the words and add them to your searched word list
                     }else if(messageCode == WORD_LIST){
-                        System.out.println("##### in WORD_LIST section #####");
 
                         //Container.getInstance().getSolution().clear();
 
-//                        boardSolution.clear();
-//
+                        // boardSolution.clear();
+
 //                        Collections.addAll(boardSolution, (message.split(",")));
 //                        Container.getInstance().setSolution(boardSolution);
 //                        System.out.println(Container.getInstance().getSolution());
-                        startGame();
+                        //startGame();
                         //if the massage is a player 2 word add it to your player 2 word list
                     }else if(messageCode == PLAYER_TWO_WORD){
 //                        player2Word = message;
@@ -438,25 +447,66 @@ public class ChatMenu extends FragmentActivity {
                     }else if(messageCode == NEW_GAME){
 //                        player2Ready = true;
 //                        Toast.makeText(getApplicationContext(),"Player2 Ready",Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(getApplicationContext(),"Press NewGame to play",Toast.LENGTH_SHORT).show();
+
                         //a message sent from player two to let the user know they finished playing
                     }else if(messageCode == END_GAME){
-                        if (isMaster) {
-                            if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
-                        } else {
-                            if(D) Log.i(TAG, "????? Received Player 2 Score: " + message);
+
+                        otherPlayerScore = Integer.parseInt(message);
+
+                        if(container.getPlayer1Done() && container.getPlayer2Done())
+                        {
+                            if(container.getPlayerScore() > otherPlayerScore) {
+                                Toast.makeText(getApplicationContext(),"YOU WON!",Toast.LENGTH_LONG).show();
+                            } else if(Container.getInstance().getPlayerScore() == otherPlayerScore) {
+                                Toast.makeText(getApplicationContext(),"TIE!",Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
+                            }
                         }
 
 
-//                        player2Done = true;
-//                        Toast.makeText(getApplicationContext(),"Player2 done",Toast.LENGTH_SHORT).show();
-//                        if(player1Done){
-//                            endGame();
-                        //players chat
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                         break;
+
+                    } else if(messageCode == PLAYER_DONE){
+                        if(isMaster)
+                        {
+                            container.setPlayer2Done(true);
+                        }else{
+                            container.setPlayer1Done(true);
+                        }
+                        break;
+
+
+                    } else if(messageCode == SEND_WORD){
+
+                        container.addToOtherPlayer_WordList(message);
+                        break;
+
+
+                    } else if(messageCode == RESULT){
+
+
+                        if(D) Log.e(TAG, "- ON RESULT MESSAGE -");
+
+
+
+                        Toast.makeText(getApplicationContext(), "IN RESULT", Toast.LENGTH_LONG).show();
+
+                        if(message.equals("true")) {
+                            container.setWordMatch(true);
+                        }
+                        else{
+                            container.setWordMatch(false);
+                        }
+
+                        break;
+
                     }
+
+
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
@@ -500,6 +550,10 @@ public class ChatMenu extends FragmentActivity {
         }
     }
 
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -523,51 +577,38 @@ public class ChatMenu extends FragmentActivity {
         return false;
     }
 
-    /*
-     * Start the Boggle game
-     */
-    private void startGame(){
 
-        gameRunning = true;
 
-        //Set the board and send Boggle Board message if it is Master
-        if(isMaster){
-            // set its own board first
-            startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
-
-            board = Container.getInstance().getBoard();
-
-            //System.out.println("###### BOARD " + board);
-
-            //boardSolution = Container.getInstance().getSolution();
-
-            //String message = "";
-            //send word list to player 2
-            //message = board.toString();
-//          for(int i = 0; i < searchedWordList.size(); i++){
-//              message = message + searchedWordList.get(i) + " ";
-//          }
-            // sendMessageNEW(CHAT, board.toString());
-            sendMessageNEW(BOGGLE_BOARD, board.toString());
-            //sendMessageNEW(WORD_LIST, boardSolution.toString());
+    private void ensureDiscoverable() {
+        if(D) Log.d(TAG, "ensure discoverable");
+        if (mBluetoothAdapter.getScanMode() !=
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
         }
-
-        //resets the submit button
-//      editText = (TextView)findViewById(R.id.SubmitScoreBtn);
-//      editText.setText("Submit");
-        player1Done = false;
-        player2Done = false;
-//
-//      //display the boggle board
-//      resetMatrix();
-
-//      //set the grid path to blank
-//      resetPath();
-
-//      //start timer
-//      setTimer();
-
-        //keep screen on
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
+
+
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        if(D) Log.e(TAG, "- ON PAUSE -");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(D) Log.e(TAG, "-- ON STOP --");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Stop the Bluetooth chat services
+        if (mChatService != null) mChatService.stop();
+        if(D) Log.e(TAG, "--- ON DESTROY ---");
+    }
+
 }

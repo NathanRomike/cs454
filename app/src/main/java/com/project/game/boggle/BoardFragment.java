@@ -71,8 +71,6 @@ public class BoardFragment extends Fragment {
         }
 
 
-        //dieList=Container.getInstance().getBoard();
-
         try {
             dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
 
