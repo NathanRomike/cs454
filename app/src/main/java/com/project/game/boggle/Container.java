@@ -102,7 +102,17 @@ public class Container {
     public HashMap<String, Integer> getHighscoresDic(){return this.highscoresDic;}
 
     public void reset() {
-
+        solution = null;
+        board = new ArrayList<Character>();
+        highscores = null;
+        highscoresDic = null;
+        wordList = null;
+        word = null;
+        wordScore = 0;
+        player = 0;
+        playerScore = 0;
+        //user = null;
+        valid = 0;
     }
 
     private static final Container container = new Container();

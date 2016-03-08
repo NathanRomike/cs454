@@ -78,6 +78,7 @@ public class ChatMenu extends FragmentActivity {
     public static final int NEW_GAME = 5;
     public static final int END_GAME = 6;
     public static final int CHAT = 7;
+    public static final int RESULT = 8;
 
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
@@ -443,10 +444,21 @@ public class ChatMenu extends FragmentActivity {
                     }else if(messageCode == END_GAME){
                         if (isMaster) {
                             if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
-                        } else {
-                            if(D) Log.i(TAG, "????? Received Player 2 Score: " + message);
-                        }
 
+                            int playerOneScore = Container.getInstance().getPlayerScore();
+                            int playerTwoScore = Integer.parseInt(message);
+
+                            if (playerOneScore > playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_SHORT).show();
+                                sendMessageNEW(RESULT, "You Lost!");
+                            } else if (playerOneScore < playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_SHORT).show();
+                                sendMessageNEW(RESULT, "You Won!");
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_SHORT).show();
+                                sendMessageNEW(RESULT, "Tie Game!");
+                            }
+                        }
 
 //                        player2Done = true;
 //                        Toast.makeText(getApplicationContext(),"Player2 done",Toast.LENGTH_SHORT).show();
@@ -456,6 +468,8 @@ public class ChatMenu extends FragmentActivity {
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                         break;
+                    } else if (messageCode == RESULT) {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -532,6 +546,9 @@ public class ChatMenu extends FragmentActivity {
 
         //Set the board and send Boggle Board message if it is Master
         if(isMaster){
+            board = BoardGenerator.getRandomDice();
+            Container.getInstance().setBoard(board);
+
             // set its own board first
             startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
 

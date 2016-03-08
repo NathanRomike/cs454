@@ -49,10 +49,6 @@ public class BoardFragment extends Fragment {
                                      savedInstanceState) {
 
 
-
-
-
-
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.content_board, container, false);
         Context context = getActivity();
@@ -64,28 +60,26 @@ public class BoardFragment extends Fragment {
 
         if(Container.getInstance().getBoard().size() == 0) {
             this.setBoard(); // to generate a new board. dieList = BoardGenerator.getRandomDice();
+
+            try {
+                dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
+
+
+
+                //BoggleSolver.setBoard(dieList);
+                BoggleSolver.setBoard(Container.getInstance().getBoard());
+                BoggleSolver.boggleWordListSearch(dictionary);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         else
         {
             dieList=Container.getInstance().getBoard();
         }
 
-
         //dieList=Container.getInstance().getBoard();
-
-        try {
-            dictionary = new Dictionary(getResources().openRawResource(R.raw.dictionary));
-
-
-
-            //BoggleSolver.setBoard(dieList);
-            BoggleSolver.setBoard(Container.getInstance().getBoard());
-            BoggleSolver.boggleWordListSearch(dictionary);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 
         WordSelection.initQueue();
 

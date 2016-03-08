@@ -60,7 +60,7 @@ public class TwoPlayer extends FragmentActivity {
         displayPlayerName();
 
         final String parentPath = this.getFilesDir().getAbsolutePath();
-        new CountDownTimer(180000, 1000) {
+        new CountDownTimer(18000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
             public void onTick(long millisUntilFinished) {
@@ -208,11 +208,6 @@ public class TwoPlayer extends FragmentActivity {
         int scoreAsInt = container.getPlayerScore();
         String scoreAsString = "Score: " + Integer.toString(scoreAsInt);
         scoreTextField.setText(scoreAsString);
-    }
-
-    public void onSolve(View view) {
-        Intent intent = new Intent(this, Solution.class);
-        startActivity(intent);
     }
 
     public void goToHighScores() {
