@@ -59,6 +59,8 @@ public class OnePlayer extends FragmentActivity {
         // display player name on middle of top screen
         displayPlayerName();
 
+        Container.getInstance().setPlayerScore(0);
+
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -134,18 +136,31 @@ public class OnePlayer extends FragmentActivity {
         String word = container.getWord();
         word = word.toLowerCase();
         int wordSize=word.length();
-        submitWord(word);
+//        submitWord(word);
+//
+//        int score = container.getPlayerScore();
+//        score = computeScore(wordSize);
+//        container.setPlayerScore(score);
+//        WordSelection.unhighlightAll();
 
-        int score = container.getPlayerScore();
-        score += computeScore(wordSize);
-        container.setPlayerScore(score);
-        WordSelection.unhighlightAll();
+
+        boolean newWord = submitWord(word);
+
+        if (newWord) {
+            int score = container.getPlayerScore();
+
+            score = computeScore(wordSize);
+            container.setPlayerScore(score);
+            WordSelection.unhighlightAll();
+            updateScoreOnTop();
+
+        }
 
         // update the score displayed on top left of screen every time hit submit button
         updateScoreOnTop();
     }
 
-    public static void submitWord(String word)
+    public static boolean submitWord(String word)
     {
         Container container = Container.getInstance();
         int wordSize;
@@ -156,10 +171,10 @@ public class OnePlayer extends FragmentActivity {
             if (wordSize < 3) {
                 WordSelection.unhighlightAll();
                 container.setWord(null);
-                return;
+                return false;
             }
         } catch (Exception e) {
-            return;
+            return false;
         }
 
         ArrayList<String> wordList = container.getWordList();
@@ -171,7 +186,7 @@ public class OnePlayer extends FragmentActivity {
                 if (word.equals(words.next())) {
                     WordSelection.unhighlightAll();
                     container.setWord(null);
-                    return;
+                    return false;
                 }
             }
         }
@@ -180,11 +195,14 @@ public class OnePlayer extends FragmentActivity {
             wordList.add(word);
             container.setWordList(wordList);
             container.setWord(null);
+            return true;
         } else {
             WordSelection.unhighlightAll();
             container.setWord(null);
-            return;
+            return false;
         }
+
+
     }
 
     public static int computeScore(int wordSize){

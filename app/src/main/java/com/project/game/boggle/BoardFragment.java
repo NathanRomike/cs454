@@ -81,7 +81,6 @@ public class BoardFragment extends Fragment {
             dieList=Container.getInstance().getBoard();
         }
 
-        //dieList=Container.getInstance().getBoard();
 
         WordSelection.initQueue();
 

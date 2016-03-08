@@ -24,7 +24,7 @@
     <LinearLayout
         android:id="@+id/chat_layout"
         android:layout_width="fill_parent"
-        android:layout_height="448dp"
+        android:layout_height="413dp"
         android:orientation="vertical"
         android:layout_gravity="center">
 
@@ -52,31 +52,32 @@
                 android:text="@string/send"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_vertical|bottom"
+        android:orientation="vertical">
+
+        <Button android:id="@+id/button_basicS"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="@string/basic"
+            />
 
-            <Button android:id="@+id/button_basicS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/basic"
-                />
+        <Button android:id="@+id/button_basicM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/basic_multi"
+            />
 
-            <Button android:id="@+id/button_basicM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/basic_multi"
-                />
+        <Button android:id="@+id/button_cutthroat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cutthroat"
+            />
 
-            <Button android:id="@+id/button_cutthroat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cutthroat"
-                />
-
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

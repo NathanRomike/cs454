@@ -49,7 +49,6 @@ public class TwoPlayer extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player);
 
-
         mBluetooth = (BluetoothContainer) getApplicationContext();
         mBluetoothChatService = mBluetooth.getmBluetoothChatService();
 
@@ -62,9 +61,11 @@ public class TwoPlayer extends FragmentActivity {
         // display player name on middle of top screen
         displayPlayerName();
 
+        Container.getInstance().setPlayerScore(0);
+
         final String parentPath = this.getFilesDir().getAbsolutePath();
 
-        new CountDownTimer(18000, 1000) {
+        new CountDownTimer(180000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
             public void onTick(long millisUntilFinished) {
@@ -79,31 +80,33 @@ public class TwoPlayer extends FragmentActivity {
                 Container container = Container.getInstance();
                 String score = "" + container.getPlayerScore();
 
-                //sendMessage(6, score);
-
-                if(container.getIsMaster())
-                {
-                    container.setPlayer1Done(true);
-                }
-                else
-                {
-                    container.setPlayer2Done(true);
-                }
-
-                sendMessage(8, "");
                 sendMessage(6, score);
 
 
-                if(Container.getInstance().getPlayer1Done() && Container.getInstance().getPlayer2Done()) {
-                    if (container.getPlayerScore() > container.getOtherPlayerScore()) {
-                        Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_LONG).show();
-                    } else if (container.getPlayerScore() < container.getOtherPlayerScore()){
-                        Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),"Tie Game!",Toast.LENGTH_LONG).show();
-                    }
-                }
+
+//                if(container.getIsMaster())
+//                {
+//                    container.setPlayer1Done(true);
+//                }
+//                else
+//                {
+//                    container.setPlayer2Done(true);
+//                }
+//
+//                sendMessage(8, "");
+//                sendMessage(6, score);
+//
+//
+//                if(Container.getInstance().getPlayer1Done() && Container.getInstance().getPlayer2Done()) {
+//                    if (container.getPlayerScore() > container.getOtherPlayerScore()) {
+//                        Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_LONG).show();
+//                    } else if (container.getPlayerScore() < container.getOtherPlayerScore()){
+//                        Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_LONG).show();
+//                    }
+//                    else {
+//                        Toast.makeText(getApplicationContext(),"Tie Game!",Toast.LENGTH_LONG).show();
+//                    }
+//                }
 
             }
         }.start();

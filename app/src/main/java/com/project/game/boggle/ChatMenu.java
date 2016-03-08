@@ -270,7 +270,6 @@ public class ChatMenu extends FragmentActivity {
                 // Send a message using content of the edit text widget
                 TextView view = (TextView) findViewById(R.id.edit_text_out);
                 String message = view.getText().toString();
-                //sendMessage(message);
                 sendMessageNEW(CHAT, message);
             }
         });
@@ -299,12 +298,8 @@ public class ChatMenu extends FragmentActivity {
 
             // set its own board first
             startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
-
             timerTextField = (TextView) findViewById(R.id.countdown_timer);
-
-            //sendMessageNEW(NEW_GAME, "");
             sendMessageNEW(BOGGLE_BOARD, board.toString());
-            //sendMessageNEW(WORD_LIST, boardSolution.toString());
         }
 
         //resets the submit button
@@ -344,7 +339,6 @@ public class ChatMenu extends FragmentActivity {
                     // If the action is a key-up event on the return key, send the message
                     if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) {
                         String message = view.getText().toString();
-                        //sendMessage(message);
                         sendMessageNEW(CHAT, message);
                     }
 
@@ -423,50 +417,57 @@ public class ChatMenu extends FragmentActivity {
                     }else if(messageCode == WORD_LIST){
 
                     }else if(messageCode == PLAYER_TWO_WORD){
-//
+
                     }else if(messageCode == START_GAME){
-//                        startGame();
-                        //a message sent from player two to let the user know they are ready for a new game
+
                     }else if(messageCode == NEW_GAME){
-//                        player2Ready = true;
-//                        Toast.makeText(getApplicationContext(),"Player2 Ready",Toast.LENGTH_SHORT).show();
 
-                        //a message sent from player two to let the user know they finished playing
                     }else if(messageCode == END_GAME){
-//<<<<<<< HEAD
 
-                        otherPlayerScore = Integer.parseInt(message);
 
-                        if(container.getPlayer1Done() && container.getPlayer2Done())
-                        {
-                            if(container.getPlayerScore() > otherPlayerScore) {
-                                Toast.makeText(getApplicationContext(),"You Won!",Toast.LENGTH_LONG).show();
-                            } else if(Container.getInstance().getPlayerScore() < otherPlayerScore) {
-                                Toast.makeText(getApplicationContext(),"You Lost!",Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(),"Tie Game!",Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-//                        if (isMaster) {
-//                            if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
+//                        otherPlayerScore = Integer.parseInt(message);
 //
-//
-//                            int playerOneScore = Container.getInstance().getPlayerScore();
-//                            int playerTwoScore = Integer.parseInt(message);
-//
-//                            if (playerOneScore > playerTwoScore) {
-//                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_SHORT).show();
-//                                sendMessageNEW(RESULT, "You Lost!");
-//                            } else if (playerOneScore < playerTwoScore) {
-//                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_SHORT).show();
-//                                sendMessageNEW(RESULT, "You Won!");
-//                            } else {
-//                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_SHORT).show();
-//                                sendMessageNEW(RESULT, "Tie Game!");
+//                        if(container.getPlayer1Done() && container.getPlayer2Done())
+//                        {
+//                            if(container.getPlayerScore() > otherPlayerScore) {
+//                                Toast.makeText(getApplicationContext(),"You Won!",Toast.LENGTH_LONG).show();
+//                            } else if(Container.getInstance().getPlayerScore() < otherPlayerScore) {
+//                                Toast.makeText(getApplicationContext(),"You Lost!",Toast.LENGTH_LONG).show();
+//                            }
+//                            else {
+//                                Toast.makeText(getApplicationContext(),"Tie Game!",Toast.LENGTH_LONG).show();
 //                            }
 //                        }
+
+                        int playerOneScore = Container.getInstance().getPlayerScore();
+                        int playerTwoScore = Integer.parseInt(message);
+
+                        if (isMaster) {
+                            if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
+
+                            if (playerOneScore > playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_LONG).show();
+                                //sendMessageNEW(RESULT, "You Lost!");
+                            } else if (playerOneScore < playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_LONG).show();
+                                //sendMessageNEW(RESULT, "You Won!");
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_LONG).show();
+                                //sendMessageNEW(RESULT, "Tie Game!");
+                            }
+                        }else
+                        {
+                            if (playerOneScore > playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_LONG).show();
+                                //sendMessageNEW(RESULT, "You Lost!");
+                            } else if (playerOneScore < playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_LONG).show();
+                                //sendMessageNEW(RESULT, "You Won!");
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_LONG).show();
+                                //sendMessageNEW(RESULT, "Tie Game!");
+                            }
+                        }
 
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
@@ -488,27 +489,8 @@ public class ChatMenu extends FragmentActivity {
 
 
 
-                    }else if(messageCode == RESULT){
-
-
-                        if(D) Log.e(TAG, "- ON RESULT MESSAGE -");
-
-
-
-                        Toast.makeText(getApplicationContext(), "IN RESULT", Toast.LENGTH_LONG).show();
-
-                        if(message.equals("true")) {
-                            container.setWordMatch(true);
-                        }
-                        else{
-                            container.setWordMatch(false);
-                        }
-
-                        break;
-
-
                     } else if (messageCode == RESULT) {
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
                     }
 
