@@ -435,38 +435,38 @@ public class ChatMenu extends FragmentActivity {
                     }else if(messageCode == END_GAME){
 //<<<<<<< HEAD
 
-//                        otherPlayerScore = Integer.parseInt(message);
-//
-//                        if(container.getPlayer1Done() && container.getPlayer2Done())
-//                        {
-//                            if(container.getPlayerScore() > otherPlayerScore) {
-//                                Toast.makeText(getApplicationContext(),"YOU WON!",Toast.LENGTH_LONG).show();
-//                            } else if(Container.getInstance().getPlayerScore() == otherPlayerScore) {
-//                                Toast.makeText(getApplicationContext(),"TIE!",Toast.LENGTH_LONG).show();
-//                            }
-//                            else {
-//                                Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
-//                            }
-//                        }
+                        otherPlayerScore = Integer.parseInt(message);
 
-                        if (isMaster) {
-                            if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
-
-
-                            int playerOneScore = Container.getInstance().getPlayerScore();
-                            int playerTwoScore = Integer.parseInt(message);
-
-                            if (playerOneScore > playerTwoScore) {
-                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_SHORT).show();
-                                sendMessageNEW(RESULT, "You Lost!");
-                            } else if (playerOneScore < playerTwoScore) {
-                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_SHORT).show();
-                                sendMessageNEW(RESULT, "You Won!");
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_SHORT).show();
-                                sendMessageNEW(RESULT, "Tie Game!");
+                        if(container.getPlayer1Done() && container.getPlayer2Done())
+                        {
+                            if(container.getPlayerScore() > otherPlayerScore) {
+                                Toast.makeText(getApplicationContext(),"You Won!",Toast.LENGTH_LONG).show();
+                            } else if(Container.getInstance().getPlayerScore() < otherPlayerScore) {
+                                Toast.makeText(getApplicationContext(),"You Lost!",Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(),"Tie Game!",Toast.LENGTH_LONG).show();
                             }
                         }
+
+//                        if (isMaster) {
+//                            if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
+//
+//
+//                            int playerOneScore = Container.getInstance().getPlayerScore();
+//                            int playerTwoScore = Integer.parseInt(message);
+//
+//                            if (playerOneScore > playerTwoScore) {
+//                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_SHORT).show();
+//                                sendMessageNEW(RESULT, "You Lost!");
+//                            } else if (playerOneScore < playerTwoScore) {
+//                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_SHORT).show();
+//                                sendMessageNEW(RESULT, "You Won!");
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_SHORT).show();
+//                                sendMessageNEW(RESULT, "Tie Game!");
+//                            }
+//                        }
 
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
