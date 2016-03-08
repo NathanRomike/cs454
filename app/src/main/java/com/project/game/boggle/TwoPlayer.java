@@ -78,29 +78,31 @@ public class TwoPlayer extends FragmentActivity {
                 Container container = Container.getInstance();
                 String score = "" + container.getPlayerScore();
 
-                if(container.getIsMaster())
-                {
-                    container.setPlayer1Done(true);
-                }
-                else
-                {
-                    container.setPlayer2Done(true);
-                }
-
-                sendMessage(8, "");
                 sendMessage(6, score);
 
-
-                if(Container.getInstance().getPlayer1Done() && Container.getInstance().getPlayer2Done()) {
-                    if (container.getPlayerScore() > container.getOtherPlayerScore()) {
-                        Toast.makeText(getApplicationContext(), "YOU WON!", Toast.LENGTH_LONG).show();
-                    } else if (container.getPlayerScore() == container.getOtherPlayerScore()){
-                        Toast.makeText(getApplicationContext(), "TIE!", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
-                    }
-                }
+//                if(container.getIsMaster())
+//                {
+//                    container.setPlayer1Done(true);
+//                }
+//                else
+//                {
+//                    container.setPlayer2Done(true);
+//                }
+//
+//                sendMessage(8, "");
+//                sendMessage(6, score);
+//
+//
+//                if(Container.getInstance().getPlayer1Done() && Container.getInstance().getPlayer2Done()) {
+//                    if (container.getPlayerScore() > container.getOtherPlayerScore()) {
+//                        Toast.makeText(getApplicationContext(), "YOU WON!", Toast.LENGTH_LONG).show();
+//                    } else if (container.getPlayerScore() == container.getOtherPlayerScore()){
+//                        Toast.makeText(getApplicationContext(), "TIE!", Toast.LENGTH_LONG).show();
+//                    }
+//                    else {
+//                        Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
+//                    }
+//                }
 
             }
         }.start();
@@ -287,9 +289,9 @@ public class TwoPlayer extends FragmentActivity {
         scoreTextField.setText(scoreAsString);
     }
 
+
     public void onSolve(View view) {
         Intent intent = new Intent(this, Solution.class);
-        startActivity(intent);
     }
 
     @Override

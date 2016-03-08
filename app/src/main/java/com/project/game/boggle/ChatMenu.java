@@ -79,10 +79,10 @@ public class ChatMenu extends FragmentActivity {
     public static final int NEW_GAME = 5;
     public static final int END_GAME = 6;
     public static final int CHAT = 7;
+
     public static final int PLAYER_DONE = 8;
     public static final int SEND_WORD = 9;
     public static final int RESULT = 10;
-
 
 
 
@@ -422,25 +422,8 @@ public class ChatMenu extends FragmentActivity {
                         //if the message is a word list parse all the words and add them to your searched word list
                     }else if(messageCode == WORD_LIST){
 
-                        //Container.getInstance().getSolution().clear();
-
-                        // boardSolution.clear();
-
-//                        Collections.addAll(boardSolution, (message.split(",")));
-//                        Container.getInstance().setSolution(boardSolution);
-//                        System.out.println(Container.getInstance().getSolution());
-                        //startGame();
-                        //if the massage is a player 2 word add it to your player 2 word list
                     }else if(messageCode == PLAYER_TWO_WORD){
-//                        player2Word = message;
-//                        player2WordList.add(player2Word);
-//                        //if the game is cut add the word to the player 2 scroll list display
-//                        if(isCutThroat){
-//                            pts = getScore(player2Word);
-//                            player2Pts+=pts;
-//                            addWord(player2Word, pts, R.id.TableLayout02,true);
-//                        }
-                        //a message sent from the slave to the master to start the game
+//
                     }else if(messageCode == START_GAME){
 //                        startGame();
                         //a message sent from player two to let the user know they are ready for a new game
@@ -450,21 +433,40 @@ public class ChatMenu extends FragmentActivity {
 
                         //a message sent from player two to let the user know they finished playing
                     }else if(messageCode == END_GAME){
+//<<<<<<< HEAD
 
-                        otherPlayerScore = Integer.parseInt(message);
+//                        otherPlayerScore = Integer.parseInt(message);
+//
+//                        if(container.getPlayer1Done() && container.getPlayer2Done())
+//                        {
+//                            if(container.getPlayerScore() > otherPlayerScore) {
+//                                Toast.makeText(getApplicationContext(),"YOU WON!",Toast.LENGTH_LONG).show();
+//                            } else if(Container.getInstance().getPlayerScore() == otherPlayerScore) {
+//                                Toast.makeText(getApplicationContext(),"TIE!",Toast.LENGTH_LONG).show();
+//                            }
+//                            else {
+//                                Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
+//                            }
+//                        }
 
-                        if(container.getPlayer1Done() && container.getPlayer2Done())
-                        {
-                            if(container.getPlayerScore() > otherPlayerScore) {
-                                Toast.makeText(getApplicationContext(),"YOU WON!",Toast.LENGTH_LONG).show();
-                            } else if(Container.getInstance().getPlayerScore() == otherPlayerScore) {
-                                Toast.makeText(getApplicationContext(),"TIE!",Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(),"YOU LOSE!",Toast.LENGTH_LONG).show();
+                        if (isMaster) {
+                            if(D) Log.i(TAG, "Master Received Player 2 Score: " + message);
+
+
+                            int playerOneScore = Container.getInstance().getPlayerScore();
+                            int playerTwoScore = Integer.parseInt(message);
+
+                            if (playerOneScore > playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Won!", Toast.LENGTH_SHORT).show();
+                                sendMessageNEW(RESULT, "You Lost!");
+                            } else if (playerOneScore < playerTwoScore) {
+                                Toast.makeText(getApplicationContext(), "You Lost!", Toast.LENGTH_SHORT).show();
+                                sendMessageNEW(RESULT, "You Won!");
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Tie Game!", Toast.LENGTH_SHORT).show();
+                                sendMessageNEW(RESULT, "Tie Game!");
                             }
                         }
-
 
                     }else if(messageCode == CHAT){
                         mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
@@ -479,14 +481,14 @@ public class ChatMenu extends FragmentActivity {
                         }
                         break;
 
-
                     } else if(messageCode == SEND_WORD){
 
                         container.addToOtherPlayer_WordList(message);
                         break;
 
 
-                    } else if(messageCode == RESULT){
+
+                    }else if(messageCode == RESULT){
 
 
                         if(D) Log.e(TAG, "- ON RESULT MESSAGE -");
@@ -503,6 +505,10 @@ public class ChatMenu extends FragmentActivity {
                         }
 
                         break;
+
+
+                    } else if (messageCode == RESULT) {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -579,6 +585,7 @@ public class ChatMenu extends FragmentActivity {
 
 
 
+//<<<<<<< HEAD
     private void ensureDiscoverable() {
         if(D) Log.d(TAG, "ensure discoverable");
         if (mBluetoothAdapter.getScanMode() !=
@@ -586,6 +593,31 @@ public class ChatMenu extends FragmentActivity {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
             startActivity(discoverableIntent);
+//=======
+//        //Set the board and send Boggle Board message if it is Master
+//        if(isMaster){
+//            board = BoardGenerator.getRandomDice();
+//            Container.getInstance().setBoard(board);
+//
+//            // set its own board first
+//            startActivity(new Intent(ChatMenu.this, TwoPlayer.class));
+//
+//            board = Container.getInstance().getBoard();
+//
+//            //System.out.println("###### BOARD " + board);
+//
+//            //boardSolution = Container.getInstance().getSolution();
+//
+//            //String message = "";
+//            //send word list to player 2
+//            //message = board.toString();
+////          for(int i = 0; i < searchedWordList.size(); i++){
+////              message = message + searchedWordList.get(i) + " ";
+////          }
+//            // sendMessageNEW(CHAT, board.toString());
+//            sendMessageNEW(BOGGLE_BOARD, board.toString());
+//            //sendMessageNEW(WORD_LIST, boardSolution.toString());
+//>>>>>>> 857eb6b4ebab86fb62957cadafdde718cb279244
         }
     }
 

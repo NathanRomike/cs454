@@ -68,11 +68,5 @@
             android:layout_height="wrap_content"
             android:text="@string/submit_button"
             android:onClick="onSubmit" />
-
-        <Button android:id="@+id/solve"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/solve_button"
-            android:onClick="onSolve" />
     </LinearLayout>
 </LinearLayout>
