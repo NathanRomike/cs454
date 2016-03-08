@@ -60,6 +60,8 @@ public class OnePlayer extends FragmentActivity {
         displayPlayerName();
 
         Container.getInstance().setPlayerScore(0);
+        Container.getInstance().getWordList().clear();
+        Container.getInstance().getOtherPlayer_WordList().clear();
 
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -73,7 +75,7 @@ public class OnePlayer extends FragmentActivity {
         });
 
         final String parentPath = this.getFilesDir().getAbsolutePath();
-        new CountDownTimer(180000, 1000) {
+        new CountDownTimer(60000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
             public void onTick(long millisUntilFinished) {

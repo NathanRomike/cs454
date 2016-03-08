@@ -62,10 +62,12 @@ public class TwoPlayer extends FragmentActivity {
         displayPlayerName();
 
         Container.getInstance().setPlayerScore(0);
+        Container.getInstance().getWordList().clear();
+        Container.getInstance().getOtherPlayer_WordList().clear();
 
         final String parentPath = this.getFilesDir().getAbsolutePath();
 
-        new CountDownTimer(180000, 1000) {
+        new CountDownTimer(60000, 1000) {
             TextView timerTextField = (TextView) findViewById(R.id.countdown_timer);
 
             public void onTick(long millisUntilFinished) {
@@ -159,8 +161,10 @@ public class TwoPlayer extends FragmentActivity {
             wordSize = word.length();
 
             if (wordSize < 3) {
+                Toast.makeText(getApplicationContext(), "Word should be three or more letters!", Toast.LENGTH_SHORT).show();
                 WordSelection.unhighlightAll();
                 container.setWord(null);
+
                 return false;
             }
         } catch (Exception e) {
@@ -175,8 +179,10 @@ public class TwoPlayer extends FragmentActivity {
 
             while (words.hasNext()) {
                 if (word.equals(words.next())) {
+                    Toast.makeText(getApplicationContext(), "This word was submitted already!", Toast.LENGTH_SHORT).show();
                     WordSelection.unhighlightAll();
                     container.setWord(null);
+
                     return false;
                 }
             }
@@ -201,8 +207,10 @@ public class TwoPlayer extends FragmentActivity {
 
                     while (words2.hasNext()) {
                         if (word.equals(words2.next())) {
+                            Toast.makeText(getApplicationContext(), "The other player submitted this word!", Toast.LENGTH_SHORT).show();
                             WordSelection.unhighlightAll();
                             container.setWord(null);
+
                             return false;
                         }
                     }
@@ -211,9 +219,12 @@ public class TwoPlayer extends FragmentActivity {
 
 
                     wordList.add(word);
+                    Toast.makeText(getApplicationContext(), "Correct word", Toast.LENGTH_SHORT).show();
 
                     container.setWordList(wordList);
                     container.setWord(null);
+
+
 
 
                     sendMessage(9, word);
