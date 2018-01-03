@@ -51,5 +51,7 @@
     <string name="title_activity_bluetoothChat">Bluetooth Chat</string>
     <string name="title_activity_deviceListActivity">Device List</string>
 
+    <string name="app_id">252147462214</string>
+
 </resources>
 

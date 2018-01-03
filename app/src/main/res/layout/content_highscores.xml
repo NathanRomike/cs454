@@ -77,7 +77,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView3"
             android:layout_column="1"
             android:gravity="center"
@@ -88,7 +87,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView13"
             android:layout_column="2"
             android:gravity="center"
@@ -106,7 +104,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView4"
             android:layout_column="1"
             android:gravity="center"
@@ -117,7 +114,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView14"
             android:layout_column="2"
             android:gravity="center"
@@ -135,7 +131,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView5"
             android:layout_column="1"
             android:gravity="center"
@@ -146,7 +141,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView15"
             android:layout_column="2"
             android:gravity="center"
@@ -164,7 +158,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView6"
             android:layout_column="1"
             android:gravity="center"
@@ -175,7 +168,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView16"
             android:layout_column="2"
             android:gravity="center"
@@ -193,7 +185,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView7"
             android:layout_column="1"
             android:gravity="center"
@@ -204,7 +195,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView17"
             android:layout_column="2"
             android:gravity="center"
@@ -222,7 +212,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView8"
             android:layout_column="1"
             android:gravity="center"
@@ -233,7 +222,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView18"
             android:layout_column="2"
             android:gravity="center"
@@ -251,7 +239,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView9"
             android:layout_column="1"
             android:gravity="center"
@@ -262,7 +249,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView19"
             android:layout_column="2"
             android:gravity="center"
@@ -280,7 +266,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView10"
             android:layout_column="1"
             android:gravity="center"
@@ -291,7 +276,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/highscoreTextView20"
             android:layout_column="2"
             android:gravity="center"
