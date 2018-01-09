@@ -13,9 +13,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptionsExtension;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainMenu extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -85,7 +91,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                     .setPositiveButton("ONLINE!", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent searchPlayersIntent = Games.Players.getPlayerSearchIntent(googleApiClient);
+                            Intent searchPlayersIntent = Games.Players.getPlayerSearchIntent(googleApgit iClient);
                             startActivityForResult(searchPlayersIntent, 123);
                         }
                     })
