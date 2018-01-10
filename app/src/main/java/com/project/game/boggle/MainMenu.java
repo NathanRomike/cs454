@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptionsExtension;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,6 +31,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     private String playerName;
     private View signinButton;
     GoogleApiClient googleApiClient;
+    GoogleSignInClient signInClient;
+    private static final int RC_SELECT_PLAYERS = 9006;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                 .build();
 
         googleApiClient.connect();
+        signInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        signInClient.silentSignIn();
     }
 
     @Override
@@ -91,8 +98,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                     .setPositiveButton("ONLINE!", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent searchPlayersIntent = Games.Players.getPlayerSearchIntent(googleApgit iClient);
-                            startActivityForResult(searchPlayersIntent, 123);
+                            setUpGameRoom();
                         }
                     })
                     .setNeutralButton("BLUETOOTH", new DialogInterface.OnClickListener() {
@@ -151,5 +157,16 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         } else if (requestCode == 123) {
             Toast.makeText(this, "NO PLAYERS!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void setUpGameRoom() {
+        Games.getRealTimeMultiplayerClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .getSelectOpponentsIntent(1, 3, true)
+                .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, RC_SELECT_PLAYERS);
+                    }
+                });
     }
 }
